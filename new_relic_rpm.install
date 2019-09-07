@@ -67,6 +67,7 @@ function new_relic_rpm_uninstall() {
   variable_del('new_relic_rpm_watchdog_severities');
   variable_del('new_relic_rpm_suppress_module_not_enabled_error_always');
   variable_del('new_relic_rpm_suppress_module_not_enabled_error_on_cli');
+  variable_del('new_relic_rpm_disable_autorum');
 }
 
 /**

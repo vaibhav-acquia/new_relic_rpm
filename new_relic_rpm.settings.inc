@@ -46,6 +46,13 @@ function new_relic_rpm_settings($form, &$form_state) {
     '#default_value' => variable_get('new_relic_rpm_module_deployment', 0),
   );
 
+  $form['new_relic_rpm_disable_autorum'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Disable automatic RUM'),
+    '#description' => t('Disable automatic injection of the New Relic Browser snippet for Real User Monitoring. See also @reference_url.', array('@reference_url' => 'https://docs.newrelic.com/docs/agents/php-agent/php-agent-api/newrelic_disable_autorum')),
+    '#default_value' => variable_get('new_relic_rpm_disable_autorum', FALSE),
+  );
+
   $form['new_relic_rpm_add_manual_rum_instrumentation'] = array(
     '#type' => 'checkbox',
     '#title' => t('Manually add RUM instructions to header and footer'),
