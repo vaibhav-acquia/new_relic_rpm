@@ -27,7 +27,7 @@ function new_relic_rpm_reporting() {
     $app_health = $_SESSION['new_relic_rpm_health_xml'];
   }
   // Error out of the return is False, store data if it is good.
-  if (!$app_health) {
+  if (!$app_health || trim($app_health) == '') {
     drupal_set_message(t('The New Relic REST API has denied your key. Either the key you entered on the <a href="@settings">New Relic RPM Drupal admin page</a> is incorrect, or you have not enabled API access for this application within the New Relic RPM webiste.', array('@settings' => url('admin/config/development/new-relic-rpm'))), 'error');
     return '<h2>' . t('API access denied.') . '</h2>';
   }
@@ -63,7 +63,7 @@ function new_relic_rpm_reporting_details($cust_id, $app_id) {
 
   // Error out if value is false, save cached copy of XML if it is good.
   if (!$app_dashboard) {
-    drupal_set_message(t('The New Relic REST API has denied your key. Either the key you entered on the <a href="@settings">New Relic RPM Drupal admin page</a> is incorrect, or you have not enabled API access for this application within the New Relic RPM webiste.', array('@settings' => url('admin/config/development/new-relic-rpm'))), 'error');
+    drupal_set_message(t('The New Relic REST API has denied your key. Either the key you entered on the <a href="@settings">New Relic RPM Drupal admin page</a> is incorrect, or you have not enabled API access for this application within the New Relic RPM website.', array('@settings' => url('admin/config/development/new-relic-rpm'))), 'error');
     return '<h2>' . t('API access denied.') . '</h2>';
   }
   else {
