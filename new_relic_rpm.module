@@ -120,6 +120,20 @@ function new_relic_rpm_init() {
             if (!empty($node->type)) {
               $parts[1] .= $node->type;
               $name = implode('/', $parts);
+              // Node Type
+              newrelic_add_custom_parameter('type', $node->type);
+            }
+            // Node Op (operation)
+            if (isset($parts[2])) {
+              newrelic_add_custom_parameter('node_operation', check_plain($parts[2]));
+            }
+            // Node ID
+            if (!empty($node->nid)) {
+              newrelic_add_custom_parameter('nid', $node->nid);
+            }
+            // Revision ID
+            if (!empty($node->vid)) {
+              newrelic_add_custom_parameter('vid', $node->vid);
             }
           }
         }
