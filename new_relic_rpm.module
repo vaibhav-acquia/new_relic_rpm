@@ -94,6 +94,18 @@ function new_relic_rpm_cron() {
 }
 
 /**
+ * Implements hook_flush_caches().
+ *
+ * Detect when cache tables are cleared.
+ */
+function new_relic_rpm_flush_caches() {
+  if (extension_loaded('newrelic')) {
+    _new_relic_rpm_deploy('Drupal Cache Flush',
+        'Drupal Cache Flush: all', 'All caches cleared.');
+  }
+}
+
+/**
  * Implements hook_init().
  *
  * Sets New Relic error and exceptions handler and handles transaction naming.
