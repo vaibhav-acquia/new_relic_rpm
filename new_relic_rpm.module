@@ -258,6 +258,11 @@ function new_relic_rpm_watchdog(array $log_entry) {
     return;
   }
 
+  // Avoid marking when cron completed normally as an Notice Error
+  if ($log_entry['type'] === 'cron' && $log_entry['severity'] === WATCHDOG_NOTICE && $log_entry['message'] === 'Cron run completed.') {
+    return;
+  }
+
   $severity_list = watchdog_severity_levels();
 
   $message = "@message | Severity: (@severity) @severity_desc | Type: @type | Request URI:  @request_uri | Referrer URI: @referer_uri | User: (@uid) @name | IP Address: @ip";
