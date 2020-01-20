@@ -6,15 +6,14 @@
  */
 
 /**
- * Main page for RPM reporting. List all the applications on this API Key.
+ * Main page for New Relic reporting. List all the applications on this API Key.
  */
 function new_relic_rpm_reporting() {
-
   // If no API key is set, break here and error out.
   $api_key = variable_get('new_relic_rpm_api_key', '');
   if (empty($api_key)) {
-    drupal_set_message(t('You need to enter your New Relic API key from your New Relic account settings page before you are able to view reports within Drupal. Visit the <a href="@settings">New Relic RPM Drupal admin page</a> to enter your API key.', array('@settings' => url('admin/config/development/new-relic-rpm'))), 'error');
-    return '<h2>' . t('No API key found.') . '</h2>';
+    drupal_set_message(t('You need to enter your New Relic API key from your New Relic account settings page before you are able to view reports within Drupal. Visit the <a href="@settings">New Relic Drupal admin page</a> to enter your API key.', array('@settings' => url('admin/config/development/new-relic-rpm'))), 'error');
+    return '<h2>' . t('API key not found.') . '</h2>';
   }
 
   // Get basic app health.
@@ -28,7 +27,7 @@ function new_relic_rpm_reporting() {
   }
   // Error out of the return is False, store data if it is good.
   if (!$app_health || trim($app_health) == '') {
-    drupal_set_message(t('The New Relic REST API has denied your key. Either the key you entered on the <a href="@settings">New Relic RPM Drupal admin page</a> is incorrect, or you have not enabled API access for this application within the New Relic RPM webiste.', array('@settings' => url('admin/config/development/new-relic-rpm'))), 'error');
+    drupal_set_message(t('The New Relic REST API has denied your key. Either the key you entered on the <a href="@settings">New Relic Drupal admin page</a> is incorrect, or you have not enabled API access for this application within the New Relic website.', array('@settings' => url('admin/config/development/new-relic-rpm'))), 'error');
     return '<h2>' . t('API access denied.') . '</h2>';
   }
   else {
@@ -40,16 +39,19 @@ function new_relic_rpm_reporting() {
 }
 
 /**
- * Load the details for a specfic application.
+ * Load the details for a specific application.
+ *
+ * @param $cust_id
+ * @param $app_id
+ * @return string
  */
 function new_relic_rpm_reporting_details($cust_id, $app_id) {
-
   $output = '';
 
   // If no API key is set, break here and error out.
   $api_key = variable_get('new_relic_rpm_api_key', '');
   if (empty($api_key)) {
-    drupal_set_message(t('You need to enter your New Relic API key from your New Relic account settings page before you are able to view reports within Drupal. Visit the <a href="@settings">New Relic RPM Drupal admin page</a> to enter your API key.', array('@settings' => url('admin/config/development/new-relic-rpm'))), 'error');
+    drupal_set_message(t('You need to enter your New Relic API key from your New Relic account settings page before you are able to view reports within Drupal. Visit the <a href="@settings">New Relic Drupal admin page</a> to enter your API key.', array('@settings' => url('admin/config/development/new-relic-rpm'))), 'error');
     return '<h2>' . t('No API key found.') . '</h2>';
   }
 
@@ -63,7 +65,7 @@ function new_relic_rpm_reporting_details($cust_id, $app_id) {
 
   // Error out if value is false, save cached copy of XML if it is good.
   if (!$app_dashboard) {
-    drupal_set_message(t('The New Relic REST API has denied your key. Either the key you entered on the <a href="@settings">New Relic RPM Drupal admin page</a> is incorrect, or you have not enabled API access for this application within the New Relic RPM website.', array('@settings' => url('admin/config/development/new-relic-rpm'))), 'error');
+    drupal_set_message(t('The New Relic REST API has denied your key. Either the key you entered on the <a href="@settings">New Relic Drupal admin page</a> is incorrect, or you have not enabled API access for this application within the New Relic website.', array('@settings' => url('admin/config/development/new-relic-rpm'))), 'error');
     return '<h2>' . t('API access denied.') . '</h2>';
   }
   else {
@@ -73,7 +75,11 @@ function new_relic_rpm_reporting_details($cust_id, $app_id) {
 
   $output .= $app_dashboard;
 
-  $output .= new_relic_rpm_render_actions($cust_id, $app_id);
+  try {
+    $output .= new_relic_rpm_render_actions($cust_id, $app_id);
+  } catch (Exception $e) {
+    watchdog_exception('New Relic', $e, 'New Relic Drupal module not enabled.', array(), WATCHDOG_ERROR, '/admin/modules');
+  }
 
   return $output;
 }
@@ -84,7 +90,6 @@ function new_relic_rpm_reporting_details($cust_id, $app_id) {
  * @todo Figure out the threshold information
  */
 function new_relic_rpm_render_health($app_health) {
-
   $app_obj = simplexml_load_string($app_health);
   $cust_id = (string) $app_obj->account->id;
 
@@ -92,19 +97,17 @@ function new_relic_rpm_render_health($app_health) {
   foreach ($apps as $app) {
     foreach ($app as $data) {
 
-      foreach ($data->{"threshold-values"} as $val) {
+      foreach ($data->{'threshold-values'} as $val) {
         foreach ($val->threshold_value as $v) {
-
           $app_name = (string) $data->name;
           $attr_name = (string) $v->attributes()->name;
           $app_data[$app_name][$attr_name]['val'] = (string) $v->attributes()->formatted_metric_value;
           $app_data[$app_name][$attr_name]['mval'] = (string) $v->attributes()->metric_value;
           $app_data[$app_name][$attr_name]['thresh'] = (string) $v->attributes()->threshold_value;
           $app_data[$app_name]['AppID'] = (string) $data->id;
-
         }
-
       }
+
     }
   }
 
@@ -112,13 +115,13 @@ function new_relic_rpm_render_health($app_health) {
     'App Name',
     'App ID',
     'ApDex',
-    'Resp. Time',
+    '<abbr title="Response Time">Resp. Time</abbr>',
     'Errors %',
-    'Error Rate (EPM)',
-    'Throughput (rpm)',
+    'Error Rate (<abbr title="Errors Per Minute">EPM</abbr>)',
+    'Throughput (<abbr title="Requests Per Minute">rpm</abbr>)',
     'App Busy %',
-    'DB %',
-    'CPU',
+    '<abbr title="Database">DB</abbr> %',
+    '<abbr title="PHP processing">CPU</abbr>',
     'Memory',
     'Details',
   );
@@ -152,9 +155,13 @@ function new_relic_rpm_render_health($app_health) {
 
 /**
  * Render the quick actions menu.
+ *
+ * @param $cust_id
+ * @param $app_id
+ * @return string
+ * @throws Exception
  */
 function new_relic_rpm_render_actions($cust_id, $app_id) {
-
   $rpm_url = "https://rpm.newrelic.com/accounts/{$cust_id}/applications/{$app_id}";
   $actions = array(
     'transactions' => t('Web Transactions'),
@@ -167,7 +174,7 @@ function new_relic_rpm_render_actions($cust_id, $app_id) {
   );
   $links = array(
     'overview' => array(
-      'title' => t("Overview"),
+      'title' => t('Overview'),
       'href' => $rpm_url,
       'attributes' => array('class' => '_blank'),
     ),

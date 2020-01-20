@@ -2,19 +2,21 @@
 
 /**
  * @file
- * New Relic RPM Drupal setting form and callbacks.
+ * New Relic Drupal setting form and callbacks.
  */
 
 /**
- * New Relic RPM settings form.
+ * New Relic settings form.
+ *
+ * @param $form
+ * @param $form_state
+ * @return mixed
  */
 function new_relic_rpm_settings($form, &$form_state) {
-  $form = array();
-
   $form['new_relic_rpm_track_drush'] = array(
     '#type' => 'select',
     '#title' => t('Drush transactions'),
-    '#description' => t('How do you wish RPM to track drush commands?'),
+    '#description' => t('How do you wish New Relic to track Drush commands?'),
     '#options' => array(
       'ignore' => t('Ignore completely'),
       'bg' => t('Track as background tasks'),
@@ -26,7 +28,7 @@ function new_relic_rpm_settings($form, &$form_state) {
   $form['new_relic_rpm_track_cron'] = array(
     '#type' => 'select',
     '#title' => t('Cron transactions'),
-    '#description' => t('How do you wish RPM to track cron tasks?'),
+    '#description' => t('How do you wish New Relic to track Cron tasks?'),
     '#options' => array(
       'ignore' => t('Ignore completely'),
       'bg' => t('Track as background tasks'),
@@ -37,19 +39,19 @@ function new_relic_rpm_settings($form, &$form_state) {
 
   $form['new_relic_rpm_module_deployment'] = array(
     '#type' => 'select',
-    '#title' => t('Track module activation as deployment'),
-    '#description' => t('Turning this on will create a "deployment" on the New Relic RPM dashboard each time a module is enabled or disabled. This will help you track before and after statistics.'),
+    '#title' => t('Track module changes'),
+    '#description' => t('Turning this on will create and mark a "deployment" on the New Relic dashboard each time modules are enabled or disabled. This will help you track before and after statistics.'),
     '#options' => array(
-      '1' => t('Enable'),
+      '1' => t('Enable (recommended)'),
       '0' => t('Disable'),
     ),
-    '#default_value' => variable_get('new_relic_rpm_module_deployment', 0),
+    '#default_value' => variable_get('new_relic_rpm_module_deployment', 1),
   );
 
   $form['new_relic_rpm_disable_autorum'] = array(
     '#type' => 'checkbox',
     '#title' => t('Disable automatic RUM'),
-    '#description' => t('Disable automatic injection of the New Relic Browser snippet for Real User Monitoring. See also @reference_url.', array('@reference_url' => 'https://docs.newrelic.com/docs/agents/php-agent/php-agent-api/newrelic_disable_autorum')),
+    '#description' => t('Disable automatic injection of the New Relic Browser snippet for Real User Monitoring (RUM). See also @reference_url.', array('@reference_url' => 'https://docs.newrelic.com/docs/agents/php-agent/php-agent-api/newrelic_disable_autorum')),
     '#default_value' => variable_get('new_relic_rpm_disable_autorum', FALSE),
   );
 
@@ -64,7 +66,7 @@ function new_relic_rpm_settings($form, &$form_state) {
     '#type' => 'textarea',
     '#wysiwyg' => FALSE,
     '#title' => t('Ignore URLs'),
-    '#description' => t('Enter URLs you wish New Relic RPM to ignore. Enter one URL per line.'),
+    '#description' => t('Enter URLs you wish New Relic to ignore. Enter one URL per line.'),
     '#default_value' => variable_get('new_relic_rpm_ignore_urls', ''),
   );
 
@@ -74,7 +76,7 @@ function new_relic_rpm_settings($form, &$form_state) {
     '#title' => t('Ignored Roles'),
     '#required' => FALSE,
     '#options' => user_roles(),
-    '#description' => t('Select roles you wish New Relic RPM to ignore.'),
+    '#description' => t('Select user roles you wish New Relic to ignore.'),
     '#default_value' => variable_get('new_relic_rpm_ignored_roles', array()),
   );
 
@@ -97,7 +99,7 @@ function new_relic_rpm_settings($form, &$form_state) {
   $form['new_relic_rpm_api_key'] = array(
     '#type' => 'textfield',
     '#title' => t('API Key'),
-    '#description' => t('Enter your New Relic API key if you wish to view reports and analysis within Drupal.'),
+    '#description' => t('Enter your New Relic API key if you wish to view some reports and analysis within Drupal.'),
     '#default_value' => variable_get('new_relic_rpm_api_key', ''),
   );
 
@@ -150,15 +152,17 @@ function new_relic_rpm_settings($form, &$form_state) {
 
 /**
  * Form callback for manually creating a deployment.
+ *
+ * @param $form
+ * @param $form_state
+ * @return array
  */
 function new_relic_rpm_deploy($form, &$form_state) {
-  $form = array();
-
   $form['deploy_user'] = array(
     '#type' => 'textfield',
     '#title' => t('Deployer/Deployment Name'),
     '#required' => TRUE,
-    '#description' => t('Enter the name for this deployment of your application. This will be the name shown in your list of deployments on the New Relic RPM website.'),
+    '#description' => t('Enter the name for this deployment of your application. This will be the name shown in your list of deployments on the New Relic website.'),
   );
 
   $form['deploy_description'] = array(
@@ -189,18 +193,19 @@ function new_relic_rpm_deploy($form, &$form_state) {
 
 /**
  * FormAPI submit callback for the manual deployment creation.
+ * @param $form
+ * @param $form_state
  */
 function new_relic_rpm_deploy_submit($form, &$form_state) {
-
   $deployments = _new_relic_rpm_deploy($form_state['values']['deploy_user'],
     $form_state['values']['deploy_description'],
     $form_state['values']['deploy_changelog'],
     $form_state['values']['deploy_revision']);
 
   if (strlen($deployments) > 20) {
-    drupal_set_message(t('New Relic RPM deployment created successfully'), 'status');
+    drupal_set_message(t('New Relic deployment created successfully'), 'status');
   }
   else {
-    drupal_set_message(t('New Relic RPM deployment failed to be created. Please ensure you have your account configured on the <a href="@settings">New Relic RPM Drupal admin page</a>.', array('@settings' => url('admin/config/development/new-relic-rpm'))), 'error');
+    drupal_set_message(t('New Relic deployment failed to be recorded. Please ensure your account is configured on the <a href="@settings">New Relic Drupal admin page</a>.', array('@settings' => url('admin/config/development/new-relic-rpm'))), 'error');
   }
 }

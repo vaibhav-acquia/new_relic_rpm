@@ -7,11 +7,15 @@
 
 /**
  * Implements hook_help().
+ *
+ * @param $path
+ * @param $arg
+ * @return string
  */
 function new_relic_rpm_help($path, $arg) {
   switch ($path) {
     case 'admin/help#new_relic_rpm':
-      $output = '<p>' . t("This module's purpose is to enhance New Relic RPM's integration with Drupal and bring visibility of your website's performance into Drupal. It also allows you to perform some tasks pertaining to New Relic's monitoring of your site from within the Drupal website.") . '</p>';
+      $output = '<p>' . t("This module's purpose is to enhance integration between New Relic and Drupal to enable more visibility into your website performance. It provides useful advanced settings, reports, and monitoring of your New Relic scores from within the Drupal website.") . '</p>';
       $output .= '<p>' . t('See the <a href="@project_page">project page on Drupal.org</a> for more details.', array('@project_page' => 'https://www.drupal.org/project/new_relic_rpm')) . '</p>';
       return $output;
   }
@@ -22,8 +26,8 @@ function new_relic_rpm_help($path, $arg) {
  */
 function new_relic_rpm_menu() {
   $items['admin/content/new-relic-rpm'] = array(
-    'title' => 'New Relic RPM deployment',
-    'description' => "Create a new deployment for this site's App.",
+    'title' => 'New Relic deployments',
+    'description' => 'Mark a new deployment for this site.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('new_relic_rpm_deploy'),
     'access arguments' => array('create new relic rpm deployments'),
@@ -31,16 +35,16 @@ function new_relic_rpm_menu() {
     'file' => 'new_relic_rpm.settings.inc',
   );
   $items['admin/config/development/new-relic-rpm'] = array(
-    'title' => 'New Relic RPM Settings',
-    'description' => 'Alter settings and mange your New Relic RPM Integration.',
+    'title' => 'New Relic settings',
+    'description' => 'Alter settings and manage your New Relic Integration.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('new_relic_rpm_settings'),
     'access arguments' => array('administer new relic rpm'),
     'file' => 'new_relic_rpm.settings.inc',
   );
   $items['admin/reports/new-relic-rpm'] = array(
-    'title' => 'New Relic RPM reports',
-    'description' => 'View RPM reports and statistics.',
+    'title' => 'New Relic reports',
+    'description' => 'View New Relic reports and statistics.',
     'page callback' => 'new_relic_rpm_reporting',
     'access arguments' => array('view new relic rpm reports'),
     'file' => 'new_relic_rpm.reports.inc',
@@ -77,7 +81,7 @@ function new_relic_rpm_permission() {
 /**
  * Implements hook_cron().
  *
- * This is used to set cron tasks to be not tracked by RPM if so desired.
+ * This is used to set cron tasks to be not tracked by New Relic if so desired.
  */
 function new_relic_rpm_cron() {
   if (new_relic_rpm_extension_installed()) {
@@ -159,7 +163,8 @@ function new_relic_rpm_init() {
     if (!empty($ignored_roles)) {
       foreach ($ignored_roles as $role_id) {
         if (user_has_role($role_id)) {
-          return new_relic_rpm_set_job_state('ignore');
+          new_relic_rpm_set_job_state('ignore');
+          return;
         }
       }
     }
@@ -178,7 +183,6 @@ function _new_relic_rpm_exception_handler($exception) {
   require_once DRUPAL_ROOT . '/includes/errors.inc';
 
   try {
-
     // Forward the exception to New Relic.
     newrelic_notice_error(NULL, $exception);
     // Set flag to prevent duplicate logging by watchdog.
@@ -203,7 +207,7 @@ function _new_relic_rpm_exception_handler($exception) {
 /**
  * Implements hook_boot().
  *
- * This is used to set various RPM settings by URL.
+ * This is used to set various New Relic settings by URL.
  */
 function new_relic_rpm_boot() {
   $ignore_urls = variable_get('new_relic_rpm_ignore_urls', '');
@@ -254,7 +258,7 @@ function new_relic_rpm_watchdog(array $log_entry) {
   }
 
   // Check if the severity is supposed to be logged.
-  if (!in_array($log_entry['severity'], variable_get('new_relic_rpm_watchdog_severities', array()))) {
+  if (!in_array($log_entry['severity'], variable_get('new_relic_rpm_watchdog_severities', array()), true)) {
     return;
   }
 
@@ -265,7 +269,7 @@ function new_relic_rpm_watchdog(array $log_entry) {
 
   $severity_list = watchdog_severity_levels();
 
-  $message = "@message | Severity: (@severity) @severity_desc | Type: @type | Request URI:  @request_uri | Referrer URI: @referer_uri | User: (@uid) @name | IP Address: @ip";
+  $message = '@message | Severity: (@severity) @severity_desc | Type: @type | Request URI:  @request_uri | Referrer URI: @referer_uri | User: (@uid) @name | IP Address: @ip';
 
   $message = strtr($message, array(
     '@severity' => $log_entry['severity'],
@@ -304,6 +308,8 @@ function new_relic_rpm_preprocess_html(&$variables) {
 
 /**
  * Tells New Relic if a job should be ignored or counted as a background job.
+ *
+ * @param $setting
  */
 function new_relic_rpm_set_job_state($setting) {
   if (!new_relic_rpm_extension_installed()) {
@@ -316,9 +322,8 @@ function new_relic_rpm_set_job_state($setting) {
       break;
 
     case 'ignore':
-      newrelic_ignore_transaction(TRUE);
+      newrelic_ignore_transaction();
       break;
-
   }
 }
 
@@ -341,8 +346,8 @@ function new_relic_rpm_extension_installed() {
     // i.e. drush updatedb.
     if (function_exists('module_implements')
       && !variable_get('new_relic_rpm_suppress_module_not_enabled_error_always', FALSE)
-      && (php_sapi_name() != 'cli' || !variable_get('new_relic_rpm_suppress_module_not_enabled_error_on_cli', FALSE))) {
-      watchdog('New Relic RPM', 'New Relic RPM PHP module not enabled.', array(), WATCHDOG_ERROR);
+      && (PHP_SAPI !== 'cli' || !variable_get('new_relic_rpm_suppress_module_not_enabled_error_on_cli', FALSE))) {
+      watchdog('New Relic', 'New Relic module not enabled.', array(), WATCHDOG_ERROR);
     }
     return FALSE;
   }
@@ -371,7 +376,10 @@ function new_relic_rpm_modules_disabled($modules) {
 }
 
 /**
- * Log module enable/disable actions as a deploy call to New Relic RPM.
+ * Log module enable/disable actions as a deploy call to New Relic.
+ *
+ * @param $new_modules
+ * @param $disable_modules
  */
 function new_relic_rpm_module_deploy($new_modules, $disable_modules) {
   // If the API Key and/or App name is/are not set, there is no sense in
@@ -415,7 +423,6 @@ function new_relic_rpm_module_deploy($new_modules, $disable_modules) {
  *   (optional) Revision id of the deployment.
  */
 function _new_relic_rpm_deploy($user = NULL, $description = NULL, $changelog = NULL, $revision = NULL) {
-
   $post_vars['deployment[application_id]'] = ini_get('newrelic.appname');
   if (isset($user)) {
     $post_vars['deployment[user]'] = $user;
@@ -431,14 +438,17 @@ function _new_relic_rpm_deploy($user = NULL, $description = NULL, $changelog = N
   }
   $deployments = new_relic_rpm_curl('https://rpm.newrelic.com/deployments.xml', $post_vars);
 
-  watchdog('New Relic RPM', 'Action logged as deployment. Log data: %details', array('%details' => $deployments));
+  watchdog('New Relic', 'Action logged as deployment. Log data: <pre>%details</pre>', array('%details' => $deployments), WATCHDOG_INFO);
 }
 
 /**
  * This is the generic cURL function all New Relic Web API calls go through.
+ *
+ * @param $url
+ * @param array $post
+ * @return bool|string
  */
 function new_relic_rpm_curl($url, $post = array()) {
-
   $api_key = variable_get('new_relic_rpm_api_key', '');
 
   // Set the header with the API key.
@@ -449,7 +459,15 @@ function new_relic_rpm_curl($url, $post = array()) {
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+
+  // There's some notes about Windows not having the CA built-in
+  if (stripos(PHP_OS, 'WIN') === 0) {
+    $curl_ssl_verify = FALSE;
+  } else {
+    $curl_ssl_verify = TRUE;
+  }
+  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $curl_ssl_verify);
+
   if (!empty($post)) {
     curl_setopt($ch, CURLOPT_POST, TRUE);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
@@ -457,7 +475,7 @@ function new_relic_rpm_curl($url, $post = array()) {
   curl_setopt($ch, CURLOPT_TIMEOUT, 30);
   $return_data = curl_exec($ch);
 
-  if (stristr($return_data, 'Access denied')) {
+  if (false !== stripos($return_data, 'Access denied')) {
     return FALSE;
   }
 

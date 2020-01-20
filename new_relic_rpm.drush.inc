@@ -2,7 +2,7 @@
 
 /**
  * @file
- * New Relic RPM Drush integration.
+ * New Relic Drush integration.
  */
 
 /**
@@ -12,7 +12,7 @@ function new_relic_rpm_drush_init() {
   if (function_exists('module_exists') && module_exists('new_relic_rpm')) {
 
     // Make sure we have access to the needed functions.
-    require_once dirname(__FILE__) . '/new_relic_rpm.module';
+    require_once __DIR__ . '/new_relic_rpm.module';
 
     if (!new_relic_rpm_extension_installed()) {
       return;
@@ -39,9 +39,13 @@ function new_relic_rpm_drush_command() {
     'description' => dt('Notify New Relic of a deployment.'),
     'arguments' => array(
       'user' => dt('Optional. User doing the deploy.'),
-      'description' => dt('Optional. A brief describing of the deployment.'),
-      'changelog' => dt('Optional. A list of changes for this deployment.'),
+      'description' => dt('Optional. A brief description of the deployment.'),
+      'changelog' => dt('Optional. List of changes for this deployment.'),
       'revision' => dt('Optional. Revision id of the deployment.'),
+    ),
+    'examples' => array(
+      'drush nrd "user@example.com" "Big theme change" "Changelog with lots of other details" "4c6a03f"' => 'Create deployment mark with all arguments (in order)',
+      'drush nrd "Deploy Bot 2020" "" "" "sprint-99"' => 'Example showing how to skip a couple of the arguments',
     ),
     'aliases' => array('nrd'),
   );
