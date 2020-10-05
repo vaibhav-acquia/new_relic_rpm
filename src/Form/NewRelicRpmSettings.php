@@ -33,14 +33,14 @@ class NewRelicRpmSettings extends ConfigFormBase {
 
     $form['api_key'] = [
       '#type' => 'textfield',
-      '#title' => t('API Key'),
-      '#description' => t('Enter your New Relic API key if you wish to view reports and analysis within Drupal.'),
-      '#default_value' => \Drupal::config('new_relic_rpm.settings')->get('api_key'),
+      '#title' => $this->t('API Key'),
+      '#description' => $this->t('Enter your New Relic API key if you wish to view reports and analysis within Drupal.'),
+      '#default_value' => $this->config('new_relic_rpm.settings')->get('api_key'),
     ];
 
     $form['transactions'] = [
       '#type' => 'details',
-      '#title' => t('Transactions'),
+      '#title' => $this->t('Transactions'),
       '#open' => TRUE,
     ];
 
@@ -104,7 +104,7 @@ class NewRelicRpmSettings extends ConfigFormBase {
 
     $form['error'] = [
       '#type' => 'details',
-      '#title' => t('Error analytics'),
+      '#title' => $this->t('Error analytics'),
       '#open' => TRUE,
     ];
 
@@ -126,7 +126,7 @@ class NewRelicRpmSettings extends ConfigFormBase {
 
     $form['deployment'] = [
       '#type' => 'details',
-      '#title' => t('Deployments'),
+      '#title' => $this->t('Deployments'),
       '#open' => TRUE,
     ];
 
@@ -154,7 +154,7 @@ class NewRelicRpmSettings extends ConfigFormBase {
 
     $form['browser'] = [
       '#type' => 'details',
-      '#title' => t('Browser'),
+      '#title' => $this->t('Browser'),
       '#open' => TRUE,
     ];
 
@@ -167,7 +167,7 @@ class NewRelicRpmSettings extends ConfigFormBase {
 
     $form['insights'] = [
       '#type' => 'details',
-      '#title' => t('Insights'),
+      '#title' => $this->t('Insights'),
       '#open' => TRUE,
     ];
 

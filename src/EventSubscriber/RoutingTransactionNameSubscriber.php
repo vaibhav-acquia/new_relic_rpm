@@ -48,11 +48,17 @@ class RoutingTransactionNameSubscriber implements EventSubscriberInterface {
     ];
     foreach ($entity_bundle_routes as $entity_bundle_route) {
       if ($route = $collection->get($entity_bundle_route)) {
-        $route->setDefault('_transaction_name_callback', [self::class, 'entityBundleRouteTransactionName']);
+        $route->setDefault('_transaction_name_callback', [
+          self::class,
+          'entityBundleRouteTransactionName',
+        ]);
       }
     }
     if ($route = $collection->get('node.add')) {
-      $route->setDefault('_transaction_name_callback', [self::class, 'nodeAddTransactionName']);
+      $route->setDefault('_transaction_name_callback', [
+        self::class,
+        'nodeAddTransactionName',
+      ]);
     }
   }
 

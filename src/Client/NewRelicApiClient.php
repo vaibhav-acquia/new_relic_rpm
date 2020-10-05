@@ -5,6 +5,8 @@ namespace Drupal\new_relic_rpm\Client;
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\StringTranslation\TranslationInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 
@@ -12,6 +14,8 @@ use GuzzleHttp\Client;
  * Controls the interaction between us and newrelic rest API v2.
  */
 class NewRelicApiClient {
+
+  use StringTranslationTrait;
 
   const API_URL = 'https://api.newrelic.com/v2';
 
@@ -75,12 +79,15 @@ class NewRelicApiClient {
    *   Decoding the returned result from newrelic.
    * @param \Drupal\Core\Logger\LoggerChannelFactoryInterface $logger_factory
    *   For logging notifications to Drupal.
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
+   *   The string translation service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, Client $http_client, Json $serialization_json, LoggerChannelFactoryInterface $logger_factory) {
+  public function __construct(ConfigFactoryInterface $config_factory, Client $http_client, Json $serialization_json, LoggerChannelFactoryInterface $logger_factory, TranslationInterface $string_translation) {
     $this->config = $config_factory->get('new_relic_rpm.settings');
     $this->httpClient = $http_client;
     $this->parser = $serialization_json;
     $this->logger = $logger_factory->get('new_relic_rpm');
+    $this->setStringTranslation($string_translation);
 
     $this->apiKey = $this->config->get('api_key');
 
@@ -132,9 +139,9 @@ class NewRelicApiClient {
       }
 
       if (empty($this->appId)) {
-        $this->logger->error(t('Unable to get appId for :name', [
+        $this->logger->error('Unable to get appId for :name', [
           ':name' => $this->appName,
-        ]));
+        ]);
       }
     }
 

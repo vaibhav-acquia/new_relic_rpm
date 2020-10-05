@@ -37,6 +37,11 @@ class NewRelicLogger implements LoggerInterface {
    */
   protected $configFactory;
 
+  /**
+   * The level of the last logged message.
+   *
+   * @var int
+   */
   protected $lastLoggedLevel = 8;
 
   /**

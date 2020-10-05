@@ -4,11 +4,39 @@ namespace Drupal\new_relic_rpm\Form;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Form\FormBase;
+use Drupal\new_relic_rpm\Client\NewRelicApiClient;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form to allow marking deployments on the New Relic interface.
  */
 class NewRelicRpmDeploy extends FormBase {
+
+  /**
+   * The new relic HTTP cilent.
+   *
+   * @var \Drupal\new_relic_rpm\Client\NewRelicApiClient
+   */
+  protected $newRelicClient;
+
+  /**
+   * NewRelicRpmDeploy constructor.
+   *
+   * @param \Drupal\new_relic_rpm\Client\NewRelicApiClient $new_relic_client
+   *   The new relic HTTP client.
+   */
+  public function __construct(NewRelicApiClient $new_relic_client) {
+    $this->newRelicClient = $new_relic_client;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('new_relic_rpm.client')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -27,7 +55,7 @@ class NewRelicRpmDeploy extends FormBase {
       '#type' => 'textfield',
       '#title' => $this->t('Revision'),
       '#required' => TRUE,
-      '#description' => t('Add a revision number to this deployment.'),
+      '#description' => $this->t('Add a revision number to this deployment.'),
     ];
 
     $form['description'] = [
@@ -61,10 +89,7 @@ class NewRelicRpmDeploy extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-
-    /** @var \Drupal\new_relic_rpm\Client\NewRelicApiClient $client */
-    $client = \Drupal::service('new_relic_rpm.client');
-    $deployment = $client->createDeployment(
+    $deployment = $this->newRelicClient->createDeployment(
       $form_state->getValue(['revision']),
       $form_state->getValue(['description']),
       $form_state->getValue(['user']),

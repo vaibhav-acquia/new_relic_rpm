@@ -2,17 +2,20 @@
 
 namespace Drupal\new_relic_rpm\EventSubscriber;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\new_relic_rpm\ExtensionAdapter\NewRelicAdapterInterface;
-use Drupal\Core\Config\ConfigImporterEvent;
 use Drupal\Core\Config\ConfigEvents;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\ConfigImporterEvent;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\new_relic_rpm\ExtensionAdapter\NewRelicAdapterInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Config event listener to mark deployments when a user imports configuration.
  */
 class NewRelicConfigSubscriber implements EventSubscriberInterface {
+
+  use StringTranslationTrait;
 
   /**
    * New Relic adapter.
@@ -73,7 +76,7 @@ class NewRelicConfigSubscriber implements EventSubscriberInterface {
     $changes = $event->getChangelist();
 
     $name = $this->currentUser->getAccountName();
-    $description = t('A configuration import was run on the site.');
+    $description = $this->t('A configuration import was run on the site.');
     $changelog = '';
 
     if (!empty($changes['create'])) {

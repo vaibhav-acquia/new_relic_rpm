@@ -15,6 +15,11 @@ use Prophecy\Argument;
  */
 class NewRelicLoggerTest extends UnitTestCase {
 
+  /**
+   * The default request context for tests.
+   *
+   * @var array
+   */
   private static $defaultContext = [
     'channel' => 'mytype',
     'ip' => '127.0.0.1',
@@ -73,13 +78,13 @@ class NewRelicLoggerTest extends UnitTestCase {
    */
   public function getMessageTests() {
     return [
-      ['My Log Message |', self::$defaultContext],
-      ['Severity: (2) Critical |', self::$defaultContext],
-      ['Type: mytype |', self::$defaultContext],
-      ['Request URI: /foo |', self::$defaultContext],
-      ['Referrer URI: /bar |', self::$defaultContext],
-      ['User: 1', self::$defaultContext],
-      ['IP Address: 127.0.0.1', self::$defaultContext],
+      ['My Log Message |'],
+      ['Severity: (2) Critical |'],
+      ['Type: mytype |'],
+      ['Request URI: /foo |'],
+      ['Referrer URI: /bar |'],
+      ['User: 1'],
+      ['IP Address: 127.0.0.1'],
     ];
   }
 
@@ -88,14 +93,14 @@ class NewRelicLoggerTest extends UnitTestCase {
    *
    * @dataProvider getMessageTests
    */
-  public function testCreatesMessage($expectedPart, $context) {
+  public function testCreatesMessage($expectedPart) {
     $adapter = $this->prophesize(NewRelicAdapterInterface::class);
     $adapter
       ->logError(Argument::containingString($expectedPart))
       ->shouldBeCalled();
 
     $logger = $this->getLogger($adapter->reveal(), [RfcLogLevel::CRITICAL]);
-    $logger->log(RfcLogLevel::CRITICAL, 'My Log Message', $context);
+    $logger->log(RfcLogLevel::CRITICAL, 'My Log Message', self::$defaultContext);
   }
 
   /**
