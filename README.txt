@@ -19,7 +19,7 @@ installation.
    http://newrelic.com
 
  * For instructions on how to install the New Relic PHP extension and the
-   reporting deamon, visit:
+   reporting daemon, visit:
    https://newrelic.com/docs/php/new-relic-for-php
 
 Note: This module was formerly titled "New Relic RPM Integration". The term
