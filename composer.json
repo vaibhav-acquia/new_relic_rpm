@@ -7,6 +7,9 @@
     "issues": "https://drupal.org/project/issues/new_relic_rpm",
     "source": "https://git.drupalcode.org/project/new_relic_rpm"
   },
+  "require": {
+    "drupal/core": "^8.8 || ^9"
+  }
   "extra": {
     "drush": {
       "services": {
