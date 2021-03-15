@@ -1,5 +1,5 @@
 new_relic_rpm.settings:
-  type: mapping
+  type: config_object
   label: Settings
   mapping:
     track_drush:
@@ -27,12 +27,12 @@ new_relic_rpm.settings:
     watchdog_severities:
       type: sequence
       sequence:
-        type: int
+        - type: integer
     views_log_slow:
       type: boolean
       label: Log slow views
     views_log_threshold:
-      type: int
+      type: integer
       label: Slow view threshold in ms
     disable_autorum:
       type: boolean
