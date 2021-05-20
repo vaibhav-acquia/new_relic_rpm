@@ -8,6 +8,7 @@ use Drupal\Tests\BrowserTestBase;
  * Tests admin UI.
  *
  * @package Drupal\Tests\new_relic_rpm\Functional
+ * @group new_relic_rpm
  */
 class AdminUiTest extends BrowserTestBase {
 
