@@ -39,21 +39,15 @@ class RoutingTransactionNameSubscriber implements EventSubscriberInterface {
       $route->setDefault('_transaction_name', $route_name);
     }
 
-    $entity_bundle_routes = [
-      'entity.node.canonical',
-      'entity.node.edit_form',
-      'entity.taxonomy_term.canonical',
-      'entity.taxonomy_term.edit_form',
-      'entity.taxonomy_term.add_form',
-    ];
-    foreach ($entity_bundle_routes as $entity_bundle_route) {
-      if ($route = $collection->get($entity_bundle_route)) {
+    foreach ($collection as $route_name => $route) {
+      if (substr_compare($route_name, 'entity.', 0)) {
         $route->setDefault('_transaction_name_callback', [
           self::class,
           'entityBundleRouteTransactionName',
         ]);
       }
     }
+
     if ($route = $collection->get('node.add')) {
       $route->setDefault('_transaction_name_callback', [
         self::class,
@@ -69,7 +63,7 @@ class RoutingTransactionNameSubscriber implements EventSubscriberInterface {
     $name = $request->attributes->get('_transaction_name');
     if (preg_match('/^entity\.([a-z_]+)\./', $name, $matches)) {
       $entity_type = $matches[1];
-      if (($entity = $request->attributes->get($entity_type)) && $entity instanceof EntityInterface) {
+      if (($entity = $request->attributes->get($entity_type)) && $entity instanceof EntityInterface && $entity->getEntityTypeId() !== $entity->bundle()) {
         return sprintf('%s:%s', $name, $entity->bundle());
       }
     }

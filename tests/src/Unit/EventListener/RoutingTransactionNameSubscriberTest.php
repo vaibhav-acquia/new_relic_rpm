@@ -52,6 +52,7 @@ class RoutingTransactionNameSubscriberTest extends UnitTestCase {
    */
   public function testEntityRouteTransactionName() {
     $entity = $this->prophesize(EntityInterface::class);
+    $entity->getEntityTypeId()->willReturn('foo');
     $entity->bundle()->willReturn('bar');
     $attributes = [
       '_transaction_name' => 'entity.foo.canonical',
