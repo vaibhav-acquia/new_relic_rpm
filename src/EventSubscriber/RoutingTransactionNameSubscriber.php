@@ -81,8 +81,10 @@ class RoutingTransactionNameSubscriber implements EventSubscriberInterface {
    */
   public static function nodeAddTransactionName(Request $request) {
     $name = $request->attributes->get('_transaction_name');
-    $node_type = $request->attributes->get('node_type');
-    return sprintf('%s:%s', $name, $node_type->id());
+    if (($node_type = $request->attributes->get('node_type')) && $node_type instanceof EntityInterface) {
+      return sprintf('%s:%s', $name, $node_type->id());
+    }
+    return $name;
   }
 
 }
