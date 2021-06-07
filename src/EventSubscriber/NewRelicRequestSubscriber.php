@@ -32,11 +32,11 @@ class NewRelicRequestSubscriber implements EventSubscriberInterface {
   protected $pathMatcher;
 
   /**
-   * The configuration for the New Relic RPM module.
+   * The configuration factory.
    *
-   * @var \Drupal\Core\Config\ImmutableConfig
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $config;
+  protected $configFactory;
 
   /**
    * An object representing the current URL path of the request.
@@ -76,7 +76,7 @@ class NewRelicRequestSubscriber implements EventSubscriberInterface {
   public function __construct(NewRelicAdapterInterface $adapter, PathMatcherInterface $path_matcher, ConfigFactoryInterface $config_factory, CurrentPathStack $current_path_stack, AccountInterface $current_user) {
     $this->adapter = $adapter;
     $this->pathMatcher = $path_matcher;
-    $this->config = $config_factory->get('new_relic_rpm.settings');
+    $this->configFactory = $config_factory;
     $this->currentPathStack = $current_path_stack;
     $this->currentUser = $current_user;
   }
@@ -107,11 +107,13 @@ class NewRelicRequestSubscriber implements EventSubscriberInterface {
       return;
     }
 
-    $ignore_roles = $this->config->get('ignore_roles');
-    $ignore_urls = $this->config->get('ignore_urls');
-    $bg_urls = $this->config->get('bg_urls');
-    $exclude_urls = $this->config->get('exclusive_urls');
-    $disable_autorum = $this->config->get('disable_autorum');
+    $config = $this->configFactory->get('new_relic_rpm.settings');
+
+    $ignore_roles = $config->get('ignore_roles');
+    $ignore_urls = $config->get('ignore_urls');
+    $bg_urls = $config->get('bg_urls');
+    $exclude_urls = $config->get('exclusive_urls');
+    $disable_autorum = $config->get('disable_autorum');
 
     if ($disable_autorum) {
       $this->adapter->disableAutorum();

@@ -5,6 +5,7 @@ namespace Drupal\new_relic_rpm\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\RfcLogLevel;
+use Drupal\new_relic_rpm\ExtensionAdapter\NewRelicAdapterInterface;
 
 /**
  * Provides a settings form to configure the New Relic RPM module.
@@ -49,9 +50,9 @@ class NewRelicRpmSettings extends ConfigFormBase {
       '#title' => $this->t('Drush transactions'),
       '#description' => $this->t('How do you wish New Relic to track drush commands?'),
       '#options' => [
-        'ignore' => $this->t('Ignore completely'),
-        'bg' => $this->t('Track as background tasks'),
-        'norm' => $this->t('Track normally'),
+        NewRelicAdapterInterface::STATE_IGNORE => $this->t('Ignore completely'),
+        NewRelicAdapterInterface::STATE_BACKGROUND => $this->t('Track as background tasks'),
+        NewRelicAdapterInterface::STATE_NORMAL => $this->t('Track normally'),
       ],
       '#default_value' => $this->config('new_relic_rpm.settings')->get('track_drush'),
     ];
@@ -61,9 +62,9 @@ class NewRelicRpmSettings extends ConfigFormBase {
       '#title' => $this->t('Cron transactions'),
       '#description' => $this->t('How do you wish New Relic to track cron tasks?'),
       '#options' => [
-        'ignore' => $this->t('Ignore completely'),
-        'bg' => $this->t('Track as background tasks'),
-        'norm' => $this->t('Track normally'),
+        NewRelicAdapterInterface::STATE_IGNORE => $this->t('Ignore completely'),
+        NewRelicAdapterInterface::STATE_BACKGROUND => $this->t('Track as background tasks'),
+        NewRelicAdapterInterface::STATE_NORMAL => $this->t('Track normally'),
       ],
       '#default_value' => $this->config('new_relic_rpm.settings')->get('track_cron'),
     ];

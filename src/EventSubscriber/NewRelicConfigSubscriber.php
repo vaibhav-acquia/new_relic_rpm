@@ -25,11 +25,11 @@ class NewRelicConfigSubscriber implements EventSubscriberInterface {
   protected $adapter;
 
   /**
-   * The configuration for the New Relic module.
+   * The configuration factory.
    *
-   * @var \Drupal\Core\Config\ImmutableConfig
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $config;
+  protected $configFactory;
 
   /**
    * The current user account.
@@ -50,7 +50,7 @@ class NewRelicConfigSubscriber implements EventSubscriberInterface {
    */
   public function __construct(NewRelicAdapterInterface $adapter, ConfigFactoryInterface $config_factory, AccountInterface $current_user) {
     $this->adapter = $adapter;
-    $this->config = $config_factory->get('new_relic_rpm.settings');
+    $this->configFactory = $config_factory;
     $this->currentUser = $current_user;
   }
 
@@ -69,7 +69,9 @@ class NewRelicConfigSubscriber implements EventSubscriberInterface {
    *   The current config event that we are responding to.
    */
   public function onImport(ConfigImporterEvent $event) {
-    if (!$this->config->get('config_import')) {
+    $config = $this->configFactory->get('new_relic_rpm.settings');
+
+    if (!$config->get('config_import')) {
       return;
     }
 

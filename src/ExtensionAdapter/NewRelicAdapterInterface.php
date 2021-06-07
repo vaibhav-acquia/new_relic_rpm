@@ -7,6 +7,8 @@ namespace Drupal\new_relic_rpm\ExtensionAdapter;
  */
 interface NewRelicAdapterInterface {
 
+  const STATE_NORMAL = 'norm';
+
   const STATE_IGNORE = 'ignore';
 
   const STATE_BACKGROUND = 'bg';
