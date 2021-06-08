@@ -15,12 +15,12 @@ class NullAdapter implements NewRelicAdapterInterface {
   /**
    * {@inheritdoc}
    */
-  public function logException(\Exception $e) {}
+  public function logException($exception) {}
 
   /**
    * {@inheritdoc}
    */
-  public function logError($message) {}
+  public function logError($message, $exception = NULL) {}
 
   /**
    * {@inheritdoc}
