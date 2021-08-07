@@ -37,9 +37,7 @@ class RoutingTransactionNameSubscriber implements EventSubscriberInterface {
     // Set a transaction name for the route.
     foreach ($collection as $route_name => $route) {
       $route->setDefault('_transaction_name', $route_name);
-    }
 
-    foreach ($collection as $route_name => $route) {
       if (substr_compare($route_name, 'entity.', 0)) {
         $route->setDefault('_transaction_name_callback', [
           self::class,
