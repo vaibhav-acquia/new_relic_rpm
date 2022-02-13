@@ -20,7 +20,7 @@ installation.
 
  * For instructions on how to install the New Relic PHP extension and the
    reporting daemon, visit:
-   https://docs.newrelic.com/docs/apm/agents/php-agent/installation/php-agent-installation-overview/
+   https://docs.newrelic.com/docs/apm/agents/php-agent/installation/php-agent-installation-overview
 
 Note: This module was formerly titled "New Relic RPM Integration". The term
 "RPM" for New Relic is dated.
@@ -36,7 +36,7 @@ INSTALLATION
 
  * New Relic must already be installed and running before the functionality
    provided by this module can be used. If you need to install New Relic on your
-   own servers, see: https://docs.newrelic.com/docs/apm/agents/php-agent/installation/php-agent-installation-overview/
+   own servers, see: https://docs.newrelic.com/docs/apm/agents/php-agent/installation/php-agent-installation-overview
    for further information.
 
 
