@@ -4,7 +4,7 @@ namespace Drupal\new_relic_rpm\RouteEnhancer;
 
 use Drupal\Core\Controller\ControllerResolverInterface;
 use Drupal\Core\Routing\EnhancerInterface;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 

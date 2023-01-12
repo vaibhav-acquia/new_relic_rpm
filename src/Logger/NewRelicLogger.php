@@ -91,7 +91,7 @@ class NewRelicLogger implements LoggerInterface {
   /**
    * {@inheritdoc}
    */
-  public function log($level, $message, array $context = []) {
+  public function log($level, $message, array $context = []): void {
 
     // Check if the severity is supposed to be logged.
     if (!$this->shouldLog($level)) {

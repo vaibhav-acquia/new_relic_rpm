@@ -2,8 +2,8 @@
 
 namespace Drupal\new_relic_rpm\EventSubscriber;
 
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Drupal\new_relic_rpm\ExtensionAdapter\NewRelicAdapterInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -43,17 +43,17 @@ class ExceptionSubscriber implements EventSubscriberInterface {
   /**
    * Handles errors for this subscriber.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
    *   The event to process.
    */
-  public function onException(GetResponseForExceptionEvent $event) {
+  public function onException(ExceptionEvent $event) {
     // Don't log http exceptions.
-    if ($event->getException() instanceof HttpExceptionInterface) {
+    if ($event->getThrowable() instanceof HttpExceptionInterface) {
       return;
     }
     if (\Drupal::config('new_relic_rpm.settings')->get('override_exception_handler')) {
       // Forward the exception to New Relic.
-      $this->adapter->logException($event->getException());
+      $this->adapter->logException($event->getThrowable());
     }
   }
 

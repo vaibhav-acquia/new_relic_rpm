@@ -3,10 +3,10 @@
 namespace Drupal\Tests\new_relic_rpm\Unit\RouteEnhancer;
 
 use Drupal\Core\Controller\ControllerResolverInterface;
+use Drupal\Core\Routing\RouteObjectInterface;
 use Drupal\new_relic_rpm\RouteEnhancer\TransactionNameEnhancer;
 use Drupal\Tests\UnitTestCase;
 use Prophecy\Argument;
-use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolverInterface;
 use Symfony\Component\Routing\Route;
