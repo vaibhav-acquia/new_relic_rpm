@@ -34,7 +34,16 @@ class ExtensionAdapter implements NewRelicAdapterInterface {
    * {@inheritdoc}
    */
   public function logError($message, $exception = NULL) {
-    newrelic_notice_error($message, $exception);
+    // If we pass NULL as the second argument to newrelic_notice_error, it will
+    // be silently ignored. So we need to check and call the function with the
+    // correct number of parameters.
+    if (isset($exception)) {
+      newrelic_notice_error($message, $exception);
+    }
+    else {
+      newrelic_notice_error($message);
+    }
+
   }
 
   /**
