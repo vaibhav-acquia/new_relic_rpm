@@ -268,7 +268,7 @@ class NewRelicApiClient {
       return $response;
     }
     catch (GuzzleException $e) {
-      watchdog_exception('new_relic_rpm', $e);
+      \Drupal\Component\Utility\DeprecationHelper::backwardsCompatibleCall(\Drupal::VERSION, '10.1.0', fn() => \Drupal\Core\Utility\Error::logException(\Drupal::logger('new_relic_rpm'), $e), fn() => watchdog_exception('new_relic_rpm', $e));
       throw $e;
     }
   }
