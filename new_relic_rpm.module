@@ -7,6 +7,7 @@
 
 use Drupal\Component\Utility\Timer;
 use Drupal\views\ViewExecutable;
+use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
@@ -89,6 +90,34 @@ function new_relic_rpm_views_post_render(ViewExecutable $view) {
       'execution_time' => $execution_timer['time'],
       'arguments' => implode('/', $view->args),
     ]);
+  }
+}
+
+/**
+ * Implements hook_page_top().
+ */
+function new_relic_rpm_page_top(array &$page_top) {
+  if (\Drupal::config('new_relic_rpm.settings')->get('rum_manual_instrumentation')
+    && function_exists('newrelic_get_browser_timing_header')
+    ) {
+
+    $page_top['new_relic_rpm'] = [
+      '#markup' => Markup::create(newrelic_get_browser_timing_header()),
+    ];
+  }
+}
+
+/**
+ * Implements hook_page_bottom().
+ */
+function new_relic_rpm_page_bottom(array &$page_bottom) {
+  if (\Drupal::config('new_relic_rpm.settings')->get('rum_manual_instrumentation')
+    && function_exists('newrelic_get_browser_timing_footer')
+    ) {
+
+    $page_bottom['new_relic_rpm'] = [
+      '#markup' => Markup::create(newrelic_get_browser_timing_footer()),
+    ];
   }
 }
 

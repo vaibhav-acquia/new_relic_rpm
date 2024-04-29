@@ -166,6 +166,13 @@ class NewRelicRpmSettings extends ConfigFormBase {
       '#default_value' => $this->config('new_relic_rpm.settings')->get('disable_autorum'),
     ];
 
+    $form['browser']['rum_manual_instrumentation'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Manual Instrumentation'),
+      '#description' => $this->t('Check to implement manual instrumentation. This setting is required for Drupal 10.2.0+ due to the <code>Content-Length</code> header.'),
+      '#default_value' => $this->config('new_relic_rpm.settings')->get('rum_manual_instrumentation'),
+    ];
+
     $form['insights'] = [
       '#type' => 'details',
       '#title' => $this->t('Insights'),
@@ -210,6 +217,7 @@ class NewRelicRpmSettings extends ConfigFormBase {
       'views_log_slow',
       'views_log_threshold',
       'disable_autorum',
+      'rum_manual_instrumentation',
     ];
 
     foreach ($variables as $variable) {
