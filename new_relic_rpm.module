@@ -104,6 +104,7 @@ function new_relic_rpm_page_top(array &$page_top) {
     $page_top['new_relic_rpm'] = [
       '#markup' => Markup::create(newrelic_get_browser_timing_header()),
     ];
+    $page_top['new_relic_rpm']['#cache']['tags'] = \Drupal::config('new_relic_rpm.settings')->getCacheTags();
   }
 }
 
@@ -118,6 +119,7 @@ function new_relic_rpm_page_bottom(array &$page_bottom) {
     $page_bottom['new_relic_rpm'] = [
       '#markup' => Markup::create(newrelic_get_browser_timing_footer()),
     ];
+    $page_bottom['new_relic_rpm']['#cache']['tags'] = \Drupal::config('new_relic_rpm.settings')->getCacheTags();
   }
 }
 
