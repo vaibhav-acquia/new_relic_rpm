@@ -41,10 +41,6 @@ class ManualInstrumentationTest extends BrowserTestBase {
       ->set('rum_manual_instrumentation', TRUE)
       ->save();
 
-    // It shouldn't be necessary to clear cache for the config change to take
-    // efffect.
-    drupal_flush_all_caches();
-
     $this->drupalGet('/');
 
     $assert->responseContains("<script>console.log('header script inserted')</script>");
