@@ -80,7 +80,7 @@ class NewRelicRpmCommands extends DrushCommands {
    *   The options to pass through to the deplopment.
    *
    * @command new-relic-rpm:deploy
-   * @aliases nrd
+   * @aliases nrrd
    *
    * @option description
    *   A brief description of the deployment.
