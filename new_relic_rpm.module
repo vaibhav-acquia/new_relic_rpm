@@ -98,11 +98,11 @@ function new_relic_rpm_views_post_render(ViewExecutable $view) {
  */
 function new_relic_rpm_page_top(array &$page_top) {
   if (\Drupal::config('new_relic_rpm.settings')->get('rum_manual_instrumentation')
-    && function_exists('newrelic_get_browser_timing_header')
+    && $markup = \Drupal::service('new_relic_rpm.adapter')->getBrowserTimingHeader()
     ) {
 
     $page_top['new_relic_rpm'] = [
-      '#markup' => Markup::create(newrelic_get_browser_timing_header()),
+      '#markup' => Markup::create($markup),
     ];
   }
 
@@ -114,11 +114,11 @@ function new_relic_rpm_page_top(array &$page_top) {
  */
 function new_relic_rpm_page_bottom(array &$page_bottom) {
   if (\Drupal::config('new_relic_rpm.settings')->get('rum_manual_instrumentation')
-    && function_exists('newrelic_get_browser_timing_footer')
+    && $markup = \Drupal::service('new_relic_rpm.adapter')->getBrowserTimingFooter()
     ) {
 
     $page_bottom['new_relic_rpm'] = [
-      '#markup' => Markup::create(newrelic_get_browser_timing_footer()),
+      '#markup' => Markup::create($markup),
     ];
   }
 

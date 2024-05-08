@@ -1,0 +1,26 @@
+<?php
+
+namespace Drupal\rum_manual_instrumentation\ExtensionAdapter;
+
+use Drupal\new_relic_rpm\ExtensionAdapter\NullAdapter as ExtendedNullAdapter;
+
+/**
+ * Null Adapter extended for testing.
+ */
+class NullAdapter extends ExtendedNullAdapter {
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBrowserTimingHeader() {
+    return "<script>console.log('header script inserted')</script>";
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBrowserTimingFooter() {
+    return "<script>console.log('footer script inserted')</script>";
+  }
+
+}

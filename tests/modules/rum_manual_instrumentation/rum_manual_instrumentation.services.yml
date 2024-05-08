@@ -1,0 +1,5 @@
+services:
+  rum_manual_instrumentation.adapter:
+    decorates: new_relic_rpm.adapter
+    class: Drupal\new_relic_rpm\ExtensionAdapter\NewRelicAdapterInterface
+    factory: Drupal\rum_manual_instrumentation\ExtensionAdapter\AdapterFactory::getAdapter

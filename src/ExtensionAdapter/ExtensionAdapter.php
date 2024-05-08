@@ -67,4 +67,18 @@ class ExtensionAdapter implements NewRelicAdapterInterface {
     return newrelic_disable_autorum();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getBrowserTimingHeader() {
+    return newrelic_get_browser_timing_header();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBrowserTimingFooter() {
+    return newrelic_get_browser_timing_footer();
+  }
+
 }

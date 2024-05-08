@@ -44,4 +44,18 @@ class NullAdapter implements NewRelicAdapterInterface {
     return NULL;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getBrowserTimingHeader() {
+    return NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBrowserTimingFooter() {
+    return NULL;
+  }
+
 }
