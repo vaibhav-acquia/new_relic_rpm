@@ -97,7 +97,7 @@ function new_relic_rpm_views_post_render(ViewExecutable $view) {
  * Implements hook_page_top().
  */
 function new_relic_rpm_page_top(array &$page_top) {
-  if (\Drupal::config('new_relic_rpm.settings')->get('rum_manual_instrumentation')
+  if (\Drupal::config('new_relic_rpm.settings')->get('rum_instrumentation') == 'manual'
     && $markup = \Drupal::service('new_relic_rpm.adapter')->getBrowserTimingHeader()
     ) {
 
@@ -113,7 +113,7 @@ function new_relic_rpm_page_top(array &$page_top) {
  * Implements hook_page_bottom().
  */
 function new_relic_rpm_page_bottom(array &$page_bottom) {
-  if (\Drupal::config('new_relic_rpm.settings')->get('rum_manual_instrumentation')
+  if (\Drupal::config('new_relic_rpm.settings')->get('rum_instrumentation') == 'manual'
     && $markup = \Drupal::service('new_relic_rpm.adapter')->getBrowserTimingFooter()
     ) {
 

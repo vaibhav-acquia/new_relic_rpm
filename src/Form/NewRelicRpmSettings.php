@@ -159,18 +159,16 @@ class NewRelicRpmSettings extends ConfigFormBase {
       '#open' => TRUE,
     ];
 
-    $form['browser']['disable_autorum'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Disable AutoRUM'),
-      '#description' => $this->t('Check to disable the automatic real user monitoring inserted by a New Relic transaction.'),
-      '#default_value' => $this->config('new_relic_rpm.settings')->get('disable_autorum'),
-    ];
-
-    $form['browser']['rum_manual_instrumentation'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Manual Instrumentation'),
-      '#description' => $this->t('Check to implement manual instrumentation. This setting is required for Drupal 10.2.0+ due to the <code>Content-Length</code> header.'),
-      '#default_value' => $this->config('new_relic_rpm.settings')->get('rum_manual_instrumentation'),
+    $form['browser']['rum_instrumentation'] = [
+      '#type' => 'select',
+      '#title' => $this->t('RUM Instrumentation'),
+      '#description' => $this->t('How RUM should be instrumented. If enabled, manual instrumentation must be used for Drupal 10.2.0+ because auto-instrumentation is incompatible with the <code>Content-Length</code> header set in Drupal 10.2.0+'),
+      '#options' => [
+        'disabled' => $this->t('Disabled'),
+        'auto' => $this->t('Auto'),
+        'manual' => $this->t('Manual'),
+      ],
+      '#default_value' => $this->config('new_relic_rpm.settings')->get('rum_instrumentation'),
     ];
 
     $form['insights'] = [
@@ -216,8 +214,7 @@ class NewRelicRpmSettings extends ConfigFormBase {
       'config_import',
       'views_log_slow',
       'views_log_threshold',
-      'disable_autorum',
-      'rum_manual_instrumentation',
+      'rum_instrumentation',
     ];
 
     foreach ($variables as $variable) {

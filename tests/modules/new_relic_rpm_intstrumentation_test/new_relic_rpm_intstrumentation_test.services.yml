@@ -1,0 +1,5 @@
+services:
+  new_relic_rpm_intstrumentation_test.adapter:
+    decorates: new_relic_rpm.adapter
+    class: Drupal\new_relic_rpm\ExtensionAdapter\NewRelicAdapterInterface
+    factory: Drupal\new_relic_rpm_intstrumentation_test\ExtensionAdapter\AdapterFactory::getAdapter

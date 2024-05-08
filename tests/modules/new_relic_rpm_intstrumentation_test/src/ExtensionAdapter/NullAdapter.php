@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\rum_manual_instrumentation\ExtensionAdapter;
+namespace Drupal\new_relic_rpm_intstrumentation_test\ExtensionAdapter;
 
 use Drupal\new_relic_rpm\ExtensionAdapter\NullAdapter as ExtendedNullAdapter;
 

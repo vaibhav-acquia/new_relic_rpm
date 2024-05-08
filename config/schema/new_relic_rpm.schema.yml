@@ -34,7 +34,6 @@ new_relic_rpm.settings:
     views_log_threshold:
       type: integer
       label: Slow view threshold in ms
-    disable_autorum:
-      type: boolean
-    rum_manual_instrumentation:
-      type: boolean
+    rum_instrumentation:
+      type: string
+      label: RUM Instrumentation

@@ -1,6 +1,0 @@
-name: 'RUM Manual Instrumentation Test Module'
-description: 'Provides missing NR functions needed for test coverage'
-package: Testing
-
-type: module
-core_version_requirement: ^9.1 || ^10

@@ -10,25 +10,26 @@ use Drupal\Tests\BrowserTestBase;
  * @package Drupal\Tests\new_relic_rpm\Functional
  * @group new_relic_rpm
  */
-class ManualInstrumentationTest extends BrowserTestBase {
+class InstrumentationTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['new_relic_rpm', 'rum_manual_instrumentation'];
+  protected static $modules = ['new_relic_rpm', 'new_relic_rpm_intstrumentation_test'];
 
   protected $defaultTheme = 'stark';
 
   /**
    * Tests markup is rendered.
    */
-  public function testMarkupRender() {
+  public function testManualInstrumentation() {
     $assert = $this->assertSession();
 
     // Verify setting is disabled by default.
-    $this->assertFalse(
+    $this->assertSame(
       \Drupal::config('new_relic_rpm.settings')
-        ->get('rum_manual_instrumentation')
+        ->get('rum_instrumentation'),
+      'auto'
     );
 
     $this->drupalGet('/');
@@ -38,7 +39,7 @@ class ManualInstrumentationTest extends BrowserTestBase {
 
     $this->container->get('config.factory')
       ->getEditable('new_relic_rpm.settings')
-      ->set('rum_manual_instrumentation', TRUE)
+      ->set('rum_instrumentation', 'manual')
       ->save();
 
     $this->drupalGet('/');
