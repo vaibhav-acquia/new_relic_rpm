@@ -162,11 +162,11 @@ class NewRelicRpmSettings extends ConfigFormBase {
     $form['browser']['rum_instrumentation'] = [
       '#type' => 'select',
       '#title' => $this->t('RUM Instrumentation'),
-      '#description' => $this->t('How RUM should be instrumented. If enabled, manual instrumentation must be used for Drupal 10.2.0+ because auto-instrumentation is incompatible with the <code>Content-Length</code> header set in Drupal 10.2.0+'),
+      '#description' => $this->t('If browser monitoring is enabled, manual instrumentation must be used for Drupal 10.2.0+ because auto-instrumentation is incompatible with the <code>Content-Length</code> header set in Drupal 10.2.0+'),
       '#options' => [
-        'disabled' => $this->t('Disabled'),
-        'auto' => $this->t('Auto'),
-        'manual' => $this->t('Manual'),
+        'disabled' => $this->t('Disable browser monitoring'),
+        'auto' => $this->t('Allow auto-instrumentation'),
+        'manual' => $this->t('Manual instrumentation'),
       ],
       '#default_value' => $this->config('new_relic_rpm.settings')->get('rum_instrumentation'),
     ];
