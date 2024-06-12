@@ -11,12 +11,14 @@ use Drupal\KernelTests\KernelTestBase;
  */
 class UpdateTest extends KernelTestBase {
 
+  // phpcs:disable DrupalPractice.Objects.StrictSchemaDisabled
   /**
    * {@inheritdoc}
    *
    * Disable check of config schema so update functions can be tested.
    */
   protected $strictConfigSchema = FALSE;
+  // phpcs:enable
 
   /**
    * {@inheritdoc}

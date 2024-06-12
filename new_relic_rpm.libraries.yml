@@ -1,0 +1,5 @@
+rum_footer:
+  js:
+    js/new-relic-rum.js: {}
+  dependencies:
+    - core/drupalSettings

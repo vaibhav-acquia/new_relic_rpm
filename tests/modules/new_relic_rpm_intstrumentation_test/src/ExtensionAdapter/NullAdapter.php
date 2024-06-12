@@ -13,14 +13,14 @@ class NullAdapter extends ExtendedNullAdapter {
    * {@inheritdoc}
    */
   public function getBrowserTimingHeader() {
-    return "<script>console.log('header script inserted')</script>";
+    return "<script>document.body.appendChild(document.createTextNode('header script inserted'));</script>";
   }
 
   /**
    * {@inheritdoc}
    */
   public function getBrowserTimingFooter() {
-    return "<script>console.log('footer script inserted')</script>";
+    return "<script>document.body.appendChild(document.createTextNode('footer script inserted'));</script>";
   }
 
 }

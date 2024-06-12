@@ -6,9 +6,9 @@
  */
 
 use Drupal\Component\Utility\Timer;
-use Drupal\views\ViewExecutable;
 use Drupal\Core\Render\Markup;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\views\ViewExecutable;
 
 /**
  * Implements hook_cron().
@@ -110,19 +110,20 @@ function new_relic_rpm_page_top(array &$page_top) {
 }
 
 /**
- * Implements hook_page_bottom().
+ * Implements hook_page_attachments().
  */
-function new_relic_rpm_page_bottom(array &$page_bottom) {
+function new_relic_rpm_page_attachments(array &$attachments) {
   if (\Drupal::config('new_relic_rpm.settings')->get('rum_instrumentation') == 'manual'
     && $markup = \Drupal::service('new_relic_rpm.adapter')->getBrowserTimingFooter()
     ) {
 
-    $page_bottom['new_relic_rpm'] = [
-      '#markup' => Markup::create($markup),
-    ];
+    $attachments['#attached']['library'][] = 'new_relic_rpm/rum_footer';
+    // Pass the JS footer script to new-relic-rum.js
+    // via drupalSettings.
+    $attachments['#attached']['drupalSettings']['rum_footer']['markup'] = $markup;
   }
 
-  $page_bottom['new_relic_rpm']['#cache']['tags'] = \Drupal::config('new_relic_rpm.settings')->getCacheTags();
+  $attachments['#cache']['tags'] = \Drupal::config('new_relic_rpm.settings')->getCacheTags();
 }
 
 /**

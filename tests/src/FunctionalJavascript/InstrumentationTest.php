@@ -1,22 +1,25 @@
 <?php
 
-namespace Drupal\Tests\new_relic_rpm\Functional;
+namespace Drupal\Tests\new_relic_rpm\FunctionalJavascript;
 
-use Drupal\Tests\BrowserTestBase;
+use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
  * Tests manual instrumentation.
  *
- * @package Drupal\Tests\new_relic_rpm\Functional
+ * @package Drupal\Tests\new_relic_rpm\FunctionalJavascript
  * @group new_relic_rpm
  */
-class InstrumentationTest extends BrowserTestBase {
+class InstrumentationTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}
    */
   protected static $modules = ['new_relic_rpm', 'new_relic_rpm_intstrumentation_test'];
 
+  /**
+   * {@inheritdoc}
+   */
   protected $defaultTheme = 'stark';
 
   /**
@@ -34,8 +37,11 @@ class InstrumentationTest extends BrowserTestBase {
 
     $this->drupalGet('/');
 
-    $assert->responseNotContains("<script>console.log('header script inserted')</script>");
-    $assert->responseNotContains("<script>console.log('footer script inserted')</script>");
+    // NullAdapter, provided by new_relic_instrumentation_test, returns JS that
+    // inserts text into the DOM. By checking for this text, this test is also
+    // checking that the JS is executed in the browser.
+    $assert->responseNotContains("header script inserted");
+    $assert->responseNotContains("footer script inserted");
 
     $this->container->get('config.factory')
       ->getEditable('new_relic_rpm.settings')
@@ -44,8 +50,8 @@ class InstrumentationTest extends BrowserTestBase {
 
     $this->drupalGet('/');
 
-    $assert->responseContains("<script>console.log('header script inserted')</script>");
-    $assert->responseContains("<script>console.log('footer script inserted')</script>");
+    $assert->responseContains("header script inserted");
+    $assert->responseContains("footer script inserted");
   }
 
 }
