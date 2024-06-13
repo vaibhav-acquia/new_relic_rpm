@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\Tests\new_relic_rpm\FunctionalJavascript;
+namespace Drupal\Tests\new_relic_rpm\Functional;
 
-use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Tests manual instrumentation.
  *
- * @package Drupal\Tests\new_relic_rpm\FunctionalJavascript
+ * @package Drupal\Tests\new_relic_rpm\Functional
  * @group new_relic_rpm
  */
-class InstrumentationTest extends WebDriverTestBase {
+class InstrumentationTest extends BrowserTestBase {
 
   /**
    * {@inheritdoc}
