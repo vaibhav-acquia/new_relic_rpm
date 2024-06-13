@@ -94,33 +94,26 @@ function new_relic_rpm_views_post_render(ViewExecutable $view) {
 }
 
 /**
- * Implements hook_page_top().
- */
-function new_relic_rpm_page_top(array &$page_top) {
-  if (\Drupal::config('new_relic_rpm.settings')->get('rum_instrumentation') == 'manual'
-    && $markup = \Drupal::service('new_relic_rpm.adapter')->getBrowserTimingHeader()
-    ) {
-
-    $page_top['new_relic_rpm'] = [
-      '#markup' => Markup::create($markup),
-    ];
-  }
-
-  $page_top['new_relic_rpm']['#cache']['tags'] = \Drupal::config('new_relic_rpm.settings')->getCacheTags();
-}
-
-/**
  * Implements hook_page_attachments().
  */
 function new_relic_rpm_page_attachments(array &$attachments) {
   if (\Drupal::config('new_relic_rpm.settings')->get('rum_instrumentation') == 'manual'
-    && $markup = \Drupal::service('new_relic_rpm.adapter')->getBrowserTimingFooter()
+    && $markup = \Drupal::service('new_relic_rpm.adapter')->getBrowserTimingHeader()
     ) {
 
-    $attachments['#attached']['library'][] = 'new_relic_rpm/rum_footer';
-    // Pass the JS footer script to new-relic-rum.js
-    // via drupalSettings.
-    $attachments['#attached']['drupalSettings']['rum_footer']['markup'] = $markup;
+    // Insert RUM JS into <HEAD>.
+    $attachments['#attached']['html_head'][] = [
+      [
+        '#type' => 'html_tag',
+        '#tag' => 'script',
+        '#attributes' => [
+          'type' => 'text/javascript',
+        ],
+        '#value' => Markup::create($markup),
+        '#weight' => -999,
+      ],
+      'new_relic_rum_header',
+    ];
   }
 
   $attachments['#cache']['tags'] = \Drupal::config('new_relic_rpm.settings')->getCacheTags();

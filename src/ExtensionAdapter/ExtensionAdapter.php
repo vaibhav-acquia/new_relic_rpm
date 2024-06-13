@@ -71,8 +71,8 @@ class ExtensionAdapter implements NewRelicAdapterInterface {
    * {@inheritdoc}
    */
   public function getBrowserTimingHeader() {
-    // Return script with <script> tag.
-    return newrelic_get_browser_timing_header();
+    // Return script without <script> tag.
+    return newrelic_get_browser_timing_header(FALSE);
   }
 
   /**

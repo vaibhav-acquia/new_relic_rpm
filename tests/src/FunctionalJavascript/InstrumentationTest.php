@@ -37,11 +37,8 @@ class InstrumentationTest extends WebDriverTestBase {
 
     $this->drupalGet('/');
 
-    // NullAdapter, provided by new_relic_instrumentation_test, returns JS that
-    // inserts text into the DOM. By checking for this text, this test is also
-    // checking that the JS is executed in the browser.
-    $assert->responseNotContains("header script inserted");
-    $assert->responseNotContains("footer script inserted");
+    $assert->responseNotContains("<script type=\"text/javascript\">console.log('header script inserted');</script>");
+    $assert->responseNotContains("<script type=\"text/javascript\">console.log('footer script inserted');</script>");
 
     $this->container->get('config.factory')
       ->getEditable('new_relic_rpm.settings')
@@ -50,8 +47,8 @@ class InstrumentationTest extends WebDriverTestBase {
 
     $this->drupalGet('/');
 
-    $assert->responseContains("header script inserted");
-    $assert->responseContains("footer script inserted");
+    $assert->responseContains("<script type=\"text/javascript\">console.log('header script inserted');</script>");
+    $assert->responseContains("<script type=\"text/javascript\">console.log('footer script inserted');</script>");
   }
 
 }

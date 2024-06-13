@@ -2,8 +2,17 @@
 
 namespace Drupal\new_relic_rpm\Render;
 
-use Drupal\Core\Render\AttachmentsInterface;
+use Drupal\Core\Asset\AssetCollectionRendererInterface;
+use Drupal\Core\Asset\AssetResolverInterface;
+use Drupal\Core\Asset\AttachedAssetsInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Language\LanguageManagerInterface;
 use Drupal\Core\Render\HtmlResponseAttachmentsProcessor;
+use Drupal\Core\Render\Markup;
+use Drupal\Core\Render\RendererInterface;
+use Drupal\new_relic_rpm\ExtensionAdapter\NewRelicAdapterInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Decorates the HtmlResponseAttachmentsProcessor service.
@@ -22,31 +31,52 @@ class HtmlResponseAttachmentsProcessorDecorator extends HtmlResponseAttachmentsP
    *
    * @param \Drupal\Core\Render\HtmlResponseAttachmentsProcessor $decorated
    *   The decorated HtmlResponseAttachmentsProcessor service.
+   * @param \Drupal\Core\Asset\AssetResolverInterface $asset_resolver
+   *   An asset resolver.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   A config factory for retrieving required config objects.
+   * @param \Drupal\Core\Asset\AssetCollectionRendererInterface $css_collection_renderer
+   *   The CSS asset collection renderer.
+   * @param \Drupal\Core\Asset\AssetCollectionRendererInterface $js_collection_renderer
+   *   The JS asset collection renderer.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack.
+   * @param \Drupal\Core\Render\RendererInterface $renderer
+   *   The renderer.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
+   * @param \Drupal\Core\Language\LanguageManagerInterface|null $languageManager
+   *   The language manager.
+   * @param \Drupal\new_relic_rpm\ExtensionAdapter\NewRelicAdapterInterface $adapter
+   *   The New Relic Adapster service.
    */
-  public function __construct(HtmlResponseAttachmentsProcessor $decorated) {
+  public function __construct(HtmlResponseAttachmentsProcessor $decorated, NewRelicAdapterInterface $adapter, AssetResolverInterface $asset_resolver, ConfigFactoryInterface $config_factory, AssetCollectionRendererInterface $css_collection_renderer, AssetCollectionRendererInterface $js_collection_renderer, RequestStack $request_stack, RendererInterface $renderer, ModuleHandlerInterface $module_handler, protected ?LanguageManagerInterface $languageManager = NULL) {
+    parent::__construct($asset_resolver, $config_factory, $css_collection_renderer, $js_collection_renderer, $request_stack, $renderer, $module_handler, $languageManager);
     $this->decorated = $decorated;
+    $this->adapter = $adapter;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function processAttachments(AttachmentsInterface $response) {
-    $response = $this->decorated->processAttachments($response);
-    $attachments = $response->getAttachments();
+  protected function processAssetLibraries(AttachedAssetsInterface $assets, array $placeholders) {
+    $variables = $this->decorated->processAssetLibraries($assets, $placeholders);
 
-    // If the rum_footer library is attached, move it to the end of the library
-    // array so its JS is loaded last. JS included in Drupal libraries can
-    // only have a negative weight, making this decorator necessary.
-    if (in_array('new_relic_rpm/rum_footer', $attachments['library'])) {
-      $key = array_search('new_relic_rpm/rum_footer', $attachments['library'], TRUE);
-      unset($attachments['library'][$key]);
-      $attachments['library'][] = 'new_relic_rpm/rum_footer';
-      // Reset index.
-      $attachments['library'] = array_values($attachments['library']);
-      $response->setAttachments($attachments);
+    if (\Drupal::config('new_relic_rpm.settings')->get('rum_instrumentation') == 'manual'
+      && $markup = $this->adapter->getBrowserTimingFooter()
+      ) {
+
+      $variables['scripts_bottom'][] = [
+        '#type' => 'html_tag',
+        '#tag' => 'script',
+        '#value' => Markup::create($markup),
+        '#attributes' => [
+          'type' => 'text/javascript',
+        ],
+      ];
     }
 
-    return $response;
+    return $variables;
   }
 
 }
