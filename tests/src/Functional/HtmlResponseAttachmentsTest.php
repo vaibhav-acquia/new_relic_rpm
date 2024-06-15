@@ -19,4 +19,16 @@ class HtmlResponseAttachmentsTest extends CoreHtmlResponseAttachmentsTest {
    */
   protected static $modules = ['render_attached_test', 'new_relic_rpm', 'new_relic_rpm_intstrumentation_test'];
 
+  /**
+   * Set up test.
+   */
+  protected function setUp() : void {
+    parent::setUp();
+
+    $this->container->get('config.factory')
+      ->getEditable('new_relic_rpm.settings')
+      ->set('rum_instrumentation', 'manual')
+      ->save();
+  }
+
 }
