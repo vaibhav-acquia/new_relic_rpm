@@ -79,8 +79,18 @@ class ExtensionAdapter implements NewRelicAdapterInterface {
    * {@inheritdoc}
    */
   public function getBrowserTimingFooter() {
-    // Return script without <script> tag.
-    return newrelic_get_browser_timing_footer(FALSE);
+    // newrelic_get_browser_timing_footer() returns an empty string if called
+    // more than once during a transaction. With big_pipe enabled,
+    // HtmlResponseAttachmentsProcessor->processAttachments() gets called
+    // several times.
+    $footer_script = &drupal_static(__METHOD__);
+    if ($footer_script) {
+      return $footer_script;
+    }
+    else {
+      // Return script without <script> tag.
+      return $footer_script = newrelic_get_browser_timing_footer(FALSE);
+    }
   }
 
 }
