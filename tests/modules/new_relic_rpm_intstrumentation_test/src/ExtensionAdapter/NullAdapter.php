@@ -24,13 +24,16 @@ class NullAdapter extends ExtendedNullAdapter {
     // more than once during a transaction. With big_pipe enabled,
     // HtmlResponseAttachmentsProcessor->processAttachments() gets called
     // several times.
-    $footer_script = &drupal_static(__METHOD__);
-    if ($footer_script) {
-      return $footer_script;
+    $key = 'new_relic_rpm:rum_footer_js';
+    $cache = \Drupal::cache();
+    $cached_js = $cache->get($key);
+    if ($cached_js && $cached_js->data) {
+      return $cached_js->data;
     }
     else {
-      // Return script without <script> tag.
-      return $footer_script = $this->mimicNewRelicFooterScriptFunction();
+      $footer_script = $this->mimicNewRelicFooterScriptFunction();
+      $cache->set($key, $footer_script);
+      return $footer_script;
     }
   }
 
