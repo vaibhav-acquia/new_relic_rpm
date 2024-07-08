@@ -29,27 +29,18 @@ use Drupal\new_relic_rpm\ExtensionAdapter\NewRelicAdapterInterface;
  */
 final class HtmlResponseAttachmentsProcessorDecorator implements AttachmentsResponseProcessorInterface {
 
-  /**
-   * A config object for New Relic configuration.
-   *
-   * @var \Drupal\Core\Config\Config
-   */
-  protected $configNewRelic;
-
   public function __construct(
     private readonly HtmlResponseAttachmentsProcessor $decorated,
     private readonly NewRelicAdapterInterface $adapter,
     private readonly ConfigFactoryInterface $config,
     private readonly RendererInterface $renderer,
-  ) {
-    $this->configNewRelic = $config->get('new_relic_rpm.settings');
-  }
+  ) {}
 
   /**
    * {@inheritdoc}
    */
   public function processAttachments(AttachmentsInterface $response) {
-    if ($this->configNewRelic->get('rum_instrumentation') === 'manual'
+    if ($this->config->get('new_relic_rpm.settings')->get('rum_instrumentation') === 'manual'
       && $markup = $this->adapter->getBrowserTimingFooter()
       ) {
 
