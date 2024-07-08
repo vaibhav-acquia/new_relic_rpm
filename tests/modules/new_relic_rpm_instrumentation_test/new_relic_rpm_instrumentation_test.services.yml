@@ -1,0 +1,10 @@
+services:
+  new_relic_rpm_instrumentation_test.adapter:
+    decorates: new_relic_rpm.adapter
+    class: Drupal\new_relic_rpm\ExtensionAdapter\NewRelicAdapterInterface
+    factory: Drupal\new_relic_rpm_instrumentation_test\ExtensionAdapter\AdapterFactory::getAdapter
+  new_relic_rpm_instrumentation_test.request_subscriber:
+    class: Drupal\new_relic_rpm_instrumentation_test\EventSubscriber\NewRelicRpmInstrumentationRequestSubscriber
+    arguments: ['@new_relic_rpm.adapter']
+    tags:
+      - { name: event_subscriber }

@@ -15,7 +15,7 @@ class HtmlResponseAttachmentsTest extends CoreHtmlResponseAttachmentsTest {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['render_attached_test', 'new_relic_rpm', 'new_relic_rpm_intstrumentation_test'];
+  protected static $modules = ['render_attached_test', 'new_relic_rpm', 'new_relic_rpm_instrumentation_test'];
 
   /**
    * {@inheritdoc}

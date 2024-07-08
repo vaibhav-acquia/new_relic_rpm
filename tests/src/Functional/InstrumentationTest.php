@@ -15,7 +15,7 @@ class InstrumentationTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected static $modules = ['new_relic_rpm', 'new_relic_rpm_intstrumentation_test'];
+  protected static $modules = ['new_relic_rpm', 'new_relic_rpm_instrumentation_test'];
 
   /**
    * {@inheritdoc}

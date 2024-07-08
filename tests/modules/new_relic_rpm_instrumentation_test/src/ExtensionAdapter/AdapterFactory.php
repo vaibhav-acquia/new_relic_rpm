@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\new_relic_rpm_intstrumentation_test\ExtensionAdapter;
+namespace Drupal\new_relic_rpm_instrumentation_test\ExtensionAdapter;
 
 /**
  * Factory to create a New Relic adapter.

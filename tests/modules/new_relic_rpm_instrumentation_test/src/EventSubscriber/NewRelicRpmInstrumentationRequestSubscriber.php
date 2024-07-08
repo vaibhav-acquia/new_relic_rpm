@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\new_relic_rpm_intstrumentation_test\EventSubscriber;
+namespace Drupal\new_relic_rpm_instrumentation_test\EventSubscriber;
 
 use Drupal\new_relic_rpm\ExtensionAdapter\NewRelicAdapterInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
