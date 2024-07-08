@@ -13,16 +13,13 @@ function new_relic_rpm_post_update_instrumentation(): void {
     ->getEditable('new_relic_rpm.settings');
   $data = $config->getRawData();
 
-  if (!isset($data['disable_autorum'])) {
-    $data['rum_instrumentation'] = 'auto';
+  // If disable_autorum is either 1) not set or 2) is FALSE.
+  if (empty($data['disable_autorum'])) {
+    $config->set('rum_instrumentation', 'auto');
   }
-  elseif ($data['disable_autorum'] == TRUE) {
-    $data['rum_instrumentation'] = 'disabled';
-  }
-  elseif ($data['disable_autorum'] == FALSE) {
-    $data['rum_instrumentation'] = 'auto';
+  elseif ($data['disable_autorum'] === TRUE) {
+    $config->set('rum_instrumentation', 'disabled');
   }
 
-  unset($data['disable_autorum']);
-  $config->setData($data)->save();
+  $config->clear('disable_autorum')->save();
 }
