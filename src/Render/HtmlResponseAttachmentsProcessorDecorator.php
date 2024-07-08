@@ -27,7 +27,7 @@ use Drupal\new_relic_rpm\ExtensionAdapter\NewRelicAdapterInterface;
  * @see \Drupal\Core\Render\HtmlResponse
  * @see \Drupal\Core\Render\MainContent\HtmlRenderer
  */
-class HtmlResponseAttachmentsProcessorDecorator implements AttachmentsResponseProcessorInterface {
+final class HtmlResponseAttachmentsProcessorDecorator implements AttachmentsResponseProcessorInterface {
 
   /**
    * A config object for New Relic configuration.
@@ -36,18 +36,6 @@ class HtmlResponseAttachmentsProcessorDecorator implements AttachmentsResponsePr
    */
   protected $configNewRelic;
 
-  /**
-   * Constructs a HtmlResponseAttachmentsProcessorDecorator object.
-   *
-   * @param \Drupal\Core\Render\HtmlResponseAttachmentsProcessor $decorated
-   *   The decorated HtmlResponseAttachmentsProcessor service.
-   * @param \Drupal\new_relic_rpm\ExtensionAdapter\NewRelicAdapterInterface $adapter
-   *   The New Relic Adapster service.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
-   *   A config factory for retrieving required config objects.
-   * @param \Drupal\Core\Render\RendererInterface $renderer
-   *   The renderer.
-   */
   public function __construct(
     private readonly HtmlResponseAttachmentsProcessor $decorated,
     private readonly NewRelicAdapterInterface $adapter,
