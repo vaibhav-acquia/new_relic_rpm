@@ -31,7 +31,7 @@ class InstrumentationTest extends BrowserTestBase {
     // Verify setting is disabled by default.
     $this->assertSame('auto', $this->config('new_relic_rpm.settings')->get('rum_instrumentation'));
 
-    $this->drupalGet('/');
+    $this->drupalGet('<front>');
 
     $assert->responseNotContains("<script type=\"text/javascript\">console.log('header script inserted');</script>");
     $assert->responseNotContains("<script type=\"text/javascript\">console.log('footer script inserted');</script>");
@@ -41,7 +41,7 @@ class InstrumentationTest extends BrowserTestBase {
       ->set('rum_instrumentation', 'manual')
       ->save();
 
-    $this->drupalGet('/');
+    $this->drupalGet('<front>');
 
     $assert->responseContains("<script type=\"text/javascript\">console.log('header script inserted');</script>");
     $assert->responseContains("<script type=\"text/javascript\">console.log('footer script inserted');</script>");
