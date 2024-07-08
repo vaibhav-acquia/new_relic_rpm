@@ -81,7 +81,7 @@ interface NewRelicAdapterInterface {
    * @return string|null
    *   The browser timing header string, if available. Otherwise NULL.
    */
-  public function getBrowserTimingHeader();
+  public function getBrowserTimingHeader(): ?string;
 
   /**
    * Gets the browser timing footer for manual instrumentation.
@@ -89,6 +89,6 @@ interface NewRelicAdapterInterface {
    * @return string|null
    *   The browser timing footer string, if available. Otherwise NULL.
    */
-  public function getBrowserTimingFooter();
+  public function getBrowserTimingFooter(): ?string;
 
 }

@@ -13,20 +13,17 @@ use Drupal\Tests\system\Functional\Render\HtmlResponseAttachmentsTest as CoreHtm
 class HtmlResponseAttachmentsTest extends CoreHtmlResponseAttachmentsTest {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
   protected static $modules = ['render_attached_test', 'new_relic_rpm', 'new_relic_rpm_intstrumentation_test'];
 
   /**
-   * Set up test.
+   * {@inheritdoc}
    */
-  protected function setUp() : void {
+  protected function setUp(): void {
     parent::setUp();
 
-    $this->container->get('config.factory')
-      ->getEditable('new_relic_rpm.settings')
+    $this->config('new_relic_rpm.settings')
       ->set('rum_instrumentation', 'manual')
       ->save();
   }

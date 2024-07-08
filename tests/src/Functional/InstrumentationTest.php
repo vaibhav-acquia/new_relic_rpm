@@ -25,15 +25,11 @@ class InstrumentationTest extends BrowserTestBase {
   /**
    * Tests markup is rendered.
    */
-  public function testManualInstrumentation() {
+  public function testManualInstrumentation(): void {
     $assert = $this->assertSession();
 
     // Verify setting is disabled by default.
-    $this->assertSame(
-      \Drupal::config('new_relic_rpm.settings')
-        ->get('rum_instrumentation'),
-      'auto'
-    );
+    $this->assertSame('auto', $this->config('new_relic_rpm.settings')->get('rum_instrumentation'));
 
     $this->drupalGet('/');
 

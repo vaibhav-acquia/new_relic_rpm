@@ -36,9 +36,9 @@ function new_relic_rpm_requirements($phase) {
   }
 
   $instrumentation = \Drupal::config('new_relic_rpm.settings')->get('rum_instrumentation');
-  if ($instrumentation != 'disabled') {
+  if ($instrumentation !== 'disabled') {
     $core_version = \Drupal::VERSION;
-    $incompatible = (Comparator::greaterThanOrEqualTo($core_version, '10.2.0') && $instrumentation == 'auto') ? TRUE : FALSE;
+    $incompatible = (Comparator::greaterThanOrEqualTo($core_version, '10.2.0') && $instrumentation === 'auto') ? TRUE : FALSE;
     $requirements['newrelic_instrumentation'] = [
       'title' => t('New Relic RUM Instrumentation'),
       'description' => t('Auto-instrumentation is incompatible with Drupal 10.2.0+ due to the <code>Content-Length</code> header.'),

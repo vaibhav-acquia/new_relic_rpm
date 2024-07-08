@@ -69,7 +69,12 @@ class HtmlResponseAttachmentsProcessorDecorator implements AttachmentsResponsePr
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
    */
-  public function __construct(HtmlResponseAttachmentsProcessor $decorated, NewRelicAdapterInterface $adapter, ConfigFactoryInterface $config_factory, RendererInterface $renderer) {
+  public function __construct(
+    private readonly HtmlResponseAttachmentsProcessor $decorated,
+    private readonly NewRelicAdapterInterface $adapter,
+    private readonly ConfigFactoryInterface $config_factory,
+    private readonly RendererInterface $renderer,
+  ) {
     $this->decorated = $decorated;
     $this->adapter = $adapter;
     $this->configNewRelic = $config_factory->get('new_relic_rpm.settings');
@@ -80,7 +85,7 @@ class HtmlResponseAttachmentsProcessorDecorator implements AttachmentsResponsePr
    * {@inheritdoc}
    */
   public function processAttachments(AttachmentsInterface $response) {
-    if ($this->configNewRelic->get('rum_instrumentation') == 'manual'
+    if ($this->configNewRelic->get('rum_instrumentation') === 'manual'
       && $markup = $this->adapter->getBrowserTimingFooter()
       ) {
 
@@ -100,7 +105,7 @@ class HtmlResponseAttachmentsProcessorDecorator implements AttachmentsResponsePr
       if (isset($attached['html_response_attachment_placeholders']['scripts_bottom'])) {
         $content = str_replace(
           $attached['html_response_attachment_placeholders']['scripts_bottom'],
-          $attached['html_response_attachment_placeholders']['scripts_bottom'] . PHP_EOL . $this->renderer->renderPlain($script_render_array)->__toString(),
+          $attached['html_response_attachment_placeholders']['scripts_bottom'] . PHP_EOL . (string) $this->renderer->renderPlain($script_render_array),
           $content
         );
         $response->setContent($content);

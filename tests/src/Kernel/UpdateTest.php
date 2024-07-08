@@ -53,7 +53,7 @@ class UpdateTest extends KernelTestBase {
     new_relic_rpm_post_update_instrumentation();
 
     $rum_instrumentation = \Drupal::service('config.factory')->get('new_relic_rpm.settings')->get('rum_instrumentation');
-    $this->assertEquals($rum_instrumentation, 'auto');
+    $this->assertSame($rum_instrumentation, 'auto');
 
     $disable_autorum = \Drupal::service('config.factory')->get('new_relic_rpm.settings')->get('disable_autorum');
     $this->assertNull($disable_autorum);

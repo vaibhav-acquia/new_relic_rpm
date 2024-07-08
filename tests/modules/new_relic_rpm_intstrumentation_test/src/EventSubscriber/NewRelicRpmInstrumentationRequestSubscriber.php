@@ -12,27 +12,13 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class NewRelicRpmInstrumentationRequestSubscriber implements EventSubscriberInterface {
 
-  /**
-   * The AdapterFactory service.
-   *
-   * @var \Drupal\new_relic_rpm\ExtensionAdapter\NewRelicAdapterInterface
-   */
-  protected $adapter;
-
-  /**
-   * Constructor.
-   *
-   * @param Drupal\new_relic_rpm\ExtensionAdapter\NewRelicAdapterInterface $adapter
-   *   The AdapterFactory service.
-   */
-  public function __construct(NewRelicAdapterInterface $adapter) {
-    $this->adapter = $adapter;
+  public function __construct(private readonly NewRelicAdapterInterface $adapter) {
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [KernelEvents::REQUEST => ['onRequest']];
   }
 
@@ -42,7 +28,7 @@ class NewRelicRpmInstrumentationRequestSubscriber implements EventSubscriberInte
    * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The current response event for the page.
    */
-  public function onRequest(RequestEvent $event) {
+  public function onRequest(RequestEvent $event): void {
     // Call NewRelicAdapterInterface->getBrowserTimingFooter() to simulate
     // big_pipe, which calls
     // HtmlResponseAttachmentsProcessor->processAttachments() multiple times

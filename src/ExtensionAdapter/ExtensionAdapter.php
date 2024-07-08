@@ -70,7 +70,7 @@ class ExtensionAdapter implements NewRelicAdapterInterface {
   /**
    * {@inheritdoc}
    */
-  public function getBrowserTimingHeader() {
+  public function getBrowserTimingHeader(): ?string {
     // Return script without <script> tag.
     return newrelic_get_browser_timing_header(FALSE);
   }
@@ -78,7 +78,7 @@ class ExtensionAdapter implements NewRelicAdapterInterface {
   /**
    * {@inheritdoc}
    */
-  public function getBrowserTimingFooter() {
+  public function getBrowserTimingFooter(): ?string {
     // newrelic_get_browser_timing_footer() returns an empty string if called
     // more than once during a transaction. With big_pipe enabled,
     // HtmlResponseAttachmentsProcessor->processAttachments() gets called
@@ -86,7 +86,7 @@ class ExtensionAdapter implements NewRelicAdapterInterface {
     $key = 'new_relic_rpm:rum_footer_js';
     $cache = \Drupal::cache();
     $cached_js = $cache->get($key);
-    if ($cached_js && $cached_js->data) {
+    if ($cached_js) {
       return $cached_js->data;
     }
     else {

@@ -115,7 +115,7 @@ class NewRelicRequestSubscriber implements EventSubscriberInterface {
     $exclude_urls = $config->get('exclusive_urls');
     $rum_instrumentation = $config->get('rum_instrumentation');
 
-    if ($rum_instrumentation != 'auto') {
+    if ($rum_instrumentation !== 'auto') {
       $this->adapter->disableAutorum();
     }
 

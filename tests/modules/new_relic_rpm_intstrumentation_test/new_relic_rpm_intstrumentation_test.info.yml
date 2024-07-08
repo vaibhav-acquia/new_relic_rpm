@@ -2,4 +2,3 @@ name: 'RUM Instrumentation Test Module'
 package: Testing
 
 type: module
-core_version_requirement: ^9.1 || ^10

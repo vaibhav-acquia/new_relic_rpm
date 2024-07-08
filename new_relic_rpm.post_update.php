@@ -8,7 +8,7 @@
 /**
  * Replace disable_autorum setting with rum_instrumentation setting.
  */
-function new_relic_rpm_post_update_instrumentation() {
+function new_relic_rpm_post_update_instrumentation(): void {
   $config = \Drupal::configFactory()
     ->getEditable('new_relic_rpm.settings');
   $data = $config->getRawData();
