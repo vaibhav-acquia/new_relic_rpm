@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * A request event subscriber.
+ * Intercept request & call NewRelicAdapterInterface->getBrowserTimingFooter().
  */
 class NewRelicRpmInstrumentationRequestSubscriber implements EventSubscriberInterface {
 
