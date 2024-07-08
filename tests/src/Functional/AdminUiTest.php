@@ -60,27 +60,27 @@ class AdminUiTest extends BrowserTestBase {
     $this->assert->statusCodeEquals(200);
 
     // General.
-    $this->page->hasField('api_key');
+    $this->assert->fieldExists('api_key');
 
     // Transactions.
-    $this->page->hasField('track_drush');
-    $this->page->hasField('track_cron');
-    $this->page->hasField('ignore_roles[]');
-    $this->page->hasField('ignore_urls');
-    $this->page->hasField('bg_urls');
-    $this->page->hasField('exclusive_urls');
+    $this->assert->fieldExists('track_drush');
+    $this->assert->fieldExists('track_cron');
+    $this->assert->fieldExists('ignore_roles[]');
+    $this->assert->fieldExists('ignore_urls');
+    $this->assert->fieldExists('bg_urls');
+    $this->assert->fieldExists('exclusive_urls');
 
     // Error analytics.
-    $this->page->hasField('watchdog_severities[]');
-    $this->page->hasField('override_exception_handler');
+    $this->assert->fieldExists('watchdog_severities[]');
+    $this->assert->fieldExists('override_exception_handler');
 
     // Deployment.
-    $this->page->hasField('module_deployment');
-    $this->page->hasField('config_import');
+    $this->assert->fieldExists('module_deployment');
+    $this->assert->fieldExists('config_import');
 
     // Insight.
-    $this->page->hasField('views_log_slow');
-    $this->page->hasField('views_log_threshold');
+    $this->assert->fieldExists('views_log_slow');
+    $this->assert->fieldExists('views_log_threshold');
   }
 
 }
