@@ -89,14 +89,14 @@ SETTINGS
    exceptions.
 
  * RUM Instrumentation - This settings allows for browser monitoring to be
-   controlled. 'Disable browser monitoring' will disable auto-instrumenation
-   in the event auto-instrumenation is configured at the server level.
-   'Allow auto-instrumentation' will allow for auto-instrumenation in the event
-   it is configured at the server level. 'Manual instrumenation' will disable
-   auto-instrumentation, if configured at the server level, and insert the
-   browser monitoring JavaScript into the page header and footer.
+   controlled. 'Disable browser monitoring' will disable auto-instrumentation
+   in the event auto-instrumentation is configured at the server level.
+   'Allow auto-instrumentation' will allow for auto-instrumtenation in the
+   event it is configured at the server level. 'Manual instrumentation' will
+   disable auto-instrumentation, if configured at the server level, and insert
+   the browser monitoring JavaScript into the page header and footer.
 
-   NOTE: Auto-instrumenation is incompatible with Drupal 10.2.0+. Beginning in
+   NOTE: Auto-instrumentation is incompatible with Drupal 10.2.0+. Beginning in
    Drupal 10.2.0, Drupal sets a Content-Length header for most responses. New
    Relic RUM auto-instrumentation is incompatible with the Content-Length
    header and requires manual instrumenation.
