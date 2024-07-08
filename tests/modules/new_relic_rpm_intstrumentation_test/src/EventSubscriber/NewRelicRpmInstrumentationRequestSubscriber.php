@@ -12,8 +12,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 class NewRelicRpmInstrumentationRequestSubscriber implements EventSubscriberInterface {
 
-  public function __construct(private readonly NewRelicAdapterInterface $adapter) {
-  }
+  public function __construct(private readonly NewRelicAdapterInterface $adapter) {}
 
   /**
    * {@inheritdoc}

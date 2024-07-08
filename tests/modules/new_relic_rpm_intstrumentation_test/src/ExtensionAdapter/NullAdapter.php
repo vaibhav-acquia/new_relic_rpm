@@ -12,14 +12,14 @@ class NullAdapter extends ExtendedNullAdapter {
   /**
    * {@inheritdoc}
    */
-  public function getBrowserTimingHeader() {
+  public function getBrowserTimingHeader(): ?string {
     return "console.log('header script inserted');";
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getBrowserTimingFooter() {
+  public function getBrowserTimingFooter(): ?string {
     // newrelic_get_browser_timing_footer() returns an empty string if called
     // more than once during a transaction. With big_pipe enabled,
     // HtmlResponseAttachmentsProcessor->processAttachments() gets called

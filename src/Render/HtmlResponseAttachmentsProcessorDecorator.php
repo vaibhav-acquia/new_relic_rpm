@@ -30,32 +30,11 @@ use Drupal\new_relic_rpm\ExtensionAdapter\NewRelicAdapterInterface;
 class HtmlResponseAttachmentsProcessorDecorator implements AttachmentsResponseProcessorInterface {
 
   /**
-   * The decorated HtmlResponseAttachmentsProcessor service.
-   *
-   * @var \Drupal\Core\Render\HtmlResponseAttachmentsProcessor
-   */
-  protected $decorated;
-
-  /**
-   * The New Relic Adapster service.
-   *
-   * @var \Drupal\new_relic_rpm\ExtensionAdapter\NewRelicAdapterInterface
-   */
-  protected $adapter;
-
-  /**
    * A config object for New Relic configuration.
    *
    * @var \Drupal\Core\Config\Config
    */
   protected $configNewRelic;
-
-  /**
-   * The renderer.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected $renderer;
 
   /**
    * Constructs a HtmlResponseAttachmentsProcessorDecorator object.
@@ -64,7 +43,7 @@ class HtmlResponseAttachmentsProcessorDecorator implements AttachmentsResponsePr
    *   The decorated HtmlResponseAttachmentsProcessor service.
    * @param \Drupal\new_relic_rpm\ExtensionAdapter\NewRelicAdapterInterface $adapter
    *   The New Relic Adapster service.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config
    *   A config factory for retrieving required config objects.
    * @param \Drupal\Core\Render\RendererInterface $renderer
    *   The renderer.
@@ -72,13 +51,10 @@ class HtmlResponseAttachmentsProcessorDecorator implements AttachmentsResponsePr
   public function __construct(
     private readonly HtmlResponseAttachmentsProcessor $decorated,
     private readonly NewRelicAdapterInterface $adapter,
-    private readonly ConfigFactoryInterface $config_factory,
+    private readonly ConfigFactoryInterface $config,
     private readonly RendererInterface $renderer,
   ) {
-    $this->decorated = $decorated;
-    $this->adapter = $adapter;
-    $this->configNewRelic = $config_factory->get('new_relic_rpm.settings');
-    $this->renderer = $renderer;
+    $this->configNewRelic = $config->get('new_relic_rpm.settings');
   }
 
   /**
