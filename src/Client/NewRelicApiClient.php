@@ -16,7 +16,10 @@ use GuzzleHttp\Client;
 class NewRelicApiClient {
 
   use StringTranslationTrait;
-
+  
+  /**
+   * @deprecated use $this->getApiBaseUrl() to get an API URL instead.
+   */
   const API_URL = 'https://api.newrelic.com/v2';
 
   /**
@@ -227,7 +230,9 @@ class NewRelicApiClient {
    *   The full URL.
    */
   public function buildUrl($uri, array $filters = []) {
-    $url = static::API_URL . $uri . '.json';
+    $api_url = $this->getApiBaseUrl();
+    $url = $api_url . $uri . '.json';
+    
     if (empty($filters)) {
       return $url;
     }
@@ -271,6 +276,26 @@ class NewRelicApiClient {
       watchdog_exception('new_relic_rpm', $e);
       throw $e;
     }
+  }
+  
+  /**
+   * Based on the region, get the appropriate API URL.
+   *
+   * If your new relic account is an EU account, you'll need to use the EU
+   * url otherwise your API calls won't work.
+   * Defaults to the US API URL.
+   *
+   * @return string
+   */
+  public function getApiBaseUrl() {
+    $region = $this->config->get('region');
+    
+    $region_api_url = [
+      'us' => 'https://api.newrelic.com/v2/',
+      'eu' => 'https://api.eu.newrelic.com/v2/',
+    ];
+    
+    return $region_api_url[$region] ?? 'https://api.newrelic.com/v2/';
   }
 
 }
