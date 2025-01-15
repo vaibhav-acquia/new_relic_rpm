@@ -38,6 +38,14 @@ class NewRelicRpmSettings extends ConfigFormBase {
       '#description' => $this->t('Enter your New Relic API key if you wish to view reports and analysis within Drupal.'),
       '#default_value' => $this->config('new_relic_rpm.settings')->get('api_key'),
     ];
+    
+    $form['region'] = [
+      '#title' => $this->t('Region'),
+      '#type' => 'select',
+      '#options' => [ 'us' => 'US', 'eu' => 'EU'],
+      '#description' => $this->t('Select the region for the data center you wish to connect to.'),
+      '#default_value' => $this->config('new_relic_rpm.settings')->get('region') ?? 'us',
+    ];
 
     $form['transactions'] = [
       '#type' => 'details',
@@ -210,6 +218,7 @@ class NewRelicRpmSettings extends ConfigFormBase {
       'views_log_slow',
       'views_log_threshold',
       'disable_autorum',
+      'region',
     ];
 
     foreach ($variables as $variable) {

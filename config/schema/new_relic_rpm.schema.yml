@@ -36,3 +36,5 @@ new_relic_rpm.settings:
       label: Slow view threshold in ms
     disable_autorum:
       type: boolean
+    region:
+      type: string
