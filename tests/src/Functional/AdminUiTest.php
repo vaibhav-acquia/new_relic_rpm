@@ -78,6 +78,9 @@ class AdminUiTest extends BrowserTestBase {
     $this->page->hasField('module_deployment');
     $this->page->hasField('config_import');
 
+    // Browser.
+    $this->page->hasField('rum_instrumentation');
+
     // Insight.
     $this->page->hasField('views_log_slow');
     $this->page->hasField('views_log_threshold');

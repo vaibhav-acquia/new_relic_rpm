@@ -1,0 +1,4 @@
+name: 'RUM Instrumentation Test Module'
+package: Testing
+
+type: module

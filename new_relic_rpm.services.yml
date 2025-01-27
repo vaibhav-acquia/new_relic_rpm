@@ -34,3 +34,9 @@ services:
   new_relic_rpm.client:
     class: Drupal\new_relic_rpm\Client\NewRelicApiClient
     arguments: ['@config.factory', '@http_client', '@serialization.json', '@logger.factory', '@string_translation']
+  new_relic_rpm.html_response.attachments_processor:
+    class: Drupal\new_relic_rpm\Render\HtmlResponseAttachmentsProcessorDecorator
+    decorates: html_response.attachments_processor
+    decoration_priority: -100
+    public: false
+    arguments: ['@new_relic_rpm.html_response.attachments_processor.inner', '@new_relic_rpm.adapter', '@config.factory', '@renderer']

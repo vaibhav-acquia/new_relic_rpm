@@ -67,4 +67,33 @@ class ExtensionAdapter implements NewRelicAdapterInterface {
     return newrelic_disable_autorum();
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function getBrowserTimingHeader(): ?string {
+    // Return script without <script> tag.
+    return newrelic_get_browser_timing_header(FALSE);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getBrowserTimingFooter(): ?string {
+    // newrelic_get_browser_timing_footer() returns an empty string if called
+    // more than once during a transaction. With big_pipe enabled,
+    // HtmlResponseAttachmentsProcessor->processAttachments() gets called
+    // several times.
+    $key = 'new_relic_rpm:rum_footer_js';
+    $cache = \Drupal::cache();
+    $cached_js = $cache->get($key);
+    if ($cached_js) {
+      return $cached_js->data;
+    }
+    else {
+      $footer_script = newrelic_get_browser_timing_footer(FALSE);
+      $cache->set($key, $footer_script);
+      return $footer_script;
+    }
+  }
+
 }

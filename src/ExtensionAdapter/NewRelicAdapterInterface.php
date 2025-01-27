@@ -75,4 +75,20 @@ interface NewRelicAdapterInterface {
    */
   public function disableAutorum();
 
+  /**
+   * Gets the browser timing header for manual instrumentation.
+   *
+   * @return string|null
+   *   The browser timing header string, if available. Otherwise NULL.
+   */
+  public function getBrowserTimingHeader(): ?string;
+
+  /**
+   * Gets the browser timing footer for manual instrumentation.
+   *
+   * @return string|null
+   *   The browser timing footer string, if available. Otherwise NULL.
+   */
+  public function getBrowserTimingFooter(): ?string;
+
 }

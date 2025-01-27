@@ -88,8 +88,18 @@ SETTINGS
    exception handler, which allows reporting the correct backtrace of uncatched
    exceptions.
 
- * Disable AutoRUM - Disables the automatic browser tracking inserted by a
-   New Relic APM transaction.
+ * RUM Instrumentation - This settings allows for browser monitoring to be
+   controlled. 'Disable browser monitoring' will disable auto-instrumentation
+   in the event auto-instrumentation is configured at the server level.
+   'Allow auto-instrumentation' will allow for auto-instrumtenation in the
+   event it is configured at the server level. 'Manual instrumentation' will
+   disable auto-instrumentation, if configured at the server level, and insert
+   the browser monitoring JavaScript into the page header and footer.
+
+   NOTE: Auto-instrumentation is incompatible with Drupal 10.2.0+. Beginning in
+   Drupal 10.2.0, Drupal sets a Content-Length header for most responses. New
+   Relic RUM auto-instrumentation is incompatible with the Content-Length
+   header and requires manual instrumenation.
 
 
 MAINTAINERS
