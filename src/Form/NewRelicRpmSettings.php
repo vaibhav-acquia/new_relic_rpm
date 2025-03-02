@@ -6,6 +6,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Logger\RfcLogLevel;
 use Drupal\new_relic_rpm\ExtensionAdapter\NewRelicAdapterInterface;
+use Drupal\user\Entity\Role;
 
 /**
  * Provides a settings form to configure the New Relic RPM module.
@@ -69,7 +70,11 @@ class NewRelicRpmSettings extends ConfigFormBase {
       '#default_value' => $this->config('new_relic_rpm.settings')->get('track_cron'),
     ];
 
-    $roles = user_role_names();
+    $load_roles = Role::loadMultiple();
+    $roles = [];
+    foreach ($load_roles as $role_id => $role) {
+      $roles[$role_id] = $role->label();
+    }
     $form['transactions']['ignore_roles'] = [
       '#type' => 'select',
       '#multiple' => TRUE,
