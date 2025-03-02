@@ -84,7 +84,7 @@ class NewRelicRequestSubscriber implements EventSubscriberInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
 
     // Run after RouterListener, which has priority 32.
     return [KernelEvents::REQUEST => ['onRequest', 30]];
