@@ -103,7 +103,7 @@ class NewRelicRequestSubscriber implements EventSubscriberInterface {
     // If this is a sub request, only process it if there was no master
     // request yet. In that case, it is probably a page not found or access
     // denied page.
-    if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST && $this->processedMasterRequest) {
+    if ($event->getRequestType() !== HttpKernelInterface::MAIN_REQUEST && $this->processedMasterRequest) {
       return;
     }
 
